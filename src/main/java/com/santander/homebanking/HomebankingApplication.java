@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @SpringBootApplication
 public class HomebankingApplication {
 
-
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
