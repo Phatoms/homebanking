@@ -86,7 +86,7 @@ public class CardService {
         LocalDate initialDate = LocalDate.now();
         LocalDate thruDate = initialDate.plusYears(5);
         Card card = new Card(cardHolder, cardNumber.toString(), cvv, initialDate, thruDate, CardColor.valueOf(cardColor),
-                CardType.valueOf(cardType));
+                CardType.valueOf(cardType), "pin");
 
         card.setClient(client);
         cardRepository.save(card);
