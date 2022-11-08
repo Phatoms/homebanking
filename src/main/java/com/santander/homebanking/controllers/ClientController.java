@@ -1,7 +1,6 @@
 package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.ClientDTO;
-import com.santander.homebanking.models.Client;
 import com.santander.homebanking.services.ClientService;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,13 +85,12 @@ public class ClientController {
         if (res.getDone()){
             return new ResponseEntity<>(
                     messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
-                    HttpStatus.valueOf(res.getStatusCode());
+                    HttpStatus.valueOf(res.getStatusCode()));
         } else{
             return new ResponseEntity<>(
                     messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
                     HttpStatus.valueOf(res.getStatusCode()));
         }
-
     }
 
     @GetMapping(value = "/current")
