@@ -20,6 +20,7 @@ public class HomebankingApplication {
 	PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
+		System.out.println("borrame, estoy probando git");
 		SpringApplication.run(HomebankingApplication.class, args);
 
 	}
@@ -137,7 +138,6 @@ public class HomebankingApplication {
 
 		};
 	}
-
 
 
 
