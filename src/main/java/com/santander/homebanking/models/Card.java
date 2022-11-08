@@ -30,11 +30,13 @@ public class Card {
 
     private CardType type;
 
+    private String pin;
+
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private Client client;
 
-    public Card(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type) {
+    public Card(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type, String pin) {
         this.cardHolder = cardHolder;
         this.number = number;
         this.cvv = cvv;
@@ -42,6 +44,7 @@ public class Card {
         this.thruDate = thruDate;
         this.color = color;
         this.type = type;
+        this.pin = pin;
     }
 
     public Card() {
@@ -115,5 +118,11 @@ public class Card {
         this.type = type;
     }
 
+    public String getPin() {
+        return pin;
+    }
 
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
 }
