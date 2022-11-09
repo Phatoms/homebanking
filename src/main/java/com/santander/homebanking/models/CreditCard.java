@@ -9,7 +9,7 @@ public class CreditCard extends Card{
     private Long maxLimit = 0L;
     private Long availableLimit = 0L;
 
-    @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<TransactionCreditCard> transactions = new HashSet<>();
 
     public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type, String pin) {
