@@ -2,10 +2,7 @@ package com.santander.homebanking.services;
 
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.dtos.CardSimpleDTO;
-import com.santander.homebanking.models.Card;
-import com.santander.homebanking.models.CardColor;
-import com.santander.homebanking.models.CardType;
-import com.santander.homebanking.models.Client;
+import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.utils.CardUtils;
@@ -94,7 +91,6 @@ public class CardService {
 
         return result;
     }
-
 
 
 
