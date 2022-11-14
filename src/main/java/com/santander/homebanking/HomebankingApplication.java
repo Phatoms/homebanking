@@ -19,15 +19,18 @@ public class HomebankingApplication {
 	PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
-		System.out.println("borrame, estoy probando git");
 		SpringApplication.run(HomebankingApplication.class, args);
-
 	}
 
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, CardRepository cardRepository, AccountRepository accountRepository,
-									  LoanRepository loanRepository, ClientLoansRepository clientLoansRepository, TransactionRepository transactionRepository
+	public CommandLineRunner initData(ClientRepository clientRepository,
+									  CardRepository cardRepository,
+									  AccountRepository accountRepository,
+									  LoanRepository loanRepository,
+									  ClientLoansRepository clientLoansRepository,
+									  TransactionRepository transactionRepository,
+									  TransactionCreditCardRepository transactionCreditCardRepository
 	){
 		return (args) -> {
 
@@ -103,6 +106,11 @@ public class HomebankingApplication {
 			client3.addCards(card2);
 			client3.addCards(card3);
 
+			/// Modulo de prueba con card1
+			CreditCard creditCard = new CreditCard(card1.getCardHolder(), "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
+
+			///
+
 			clientRepository.save(client1);
 			clientRepository.save(client2);
 			clientRepository.save(client3);
@@ -134,10 +142,6 @@ public class HomebankingApplication {
 			transactionRepository.save(t7);
 			transactionRepository.save(t8);
 
-
 		};
 	}
-
-
-
 }
