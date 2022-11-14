@@ -88,6 +88,10 @@ public class Account {
         transactions.add(transaction);
     }
 
+    public Set<DebitCard> getDebitCards() {
+        return debitCards;
+    }
+
     public void addDebitCard(DebitCard debitCard){
         debitCard.setAccount(this);
         debitCards.add(debitCard);
