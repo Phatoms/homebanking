@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @SpringBootApplication
 public class HomebankingApplication {
@@ -26,6 +27,8 @@ public class HomebankingApplication {
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository,
 									  CardRepository cardRepository,
+									  CreditCardRepository creditCardRepository,
+									  DebitCardRepository debitCardRepository,
 									  AccountRepository accountRepository,
 									  LoanRepository loanRepository,
 									  ClientLoansRepository clientLoansRepository,
@@ -107,7 +110,14 @@ public class HomebankingApplication {
 			client3.addCards(card3);*/
 
 			/// Modulo de prueba con card1
-			CreditCard creditCard = new CreditCard(card1.getCardHolder(), "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
+			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
+
+			client1.addCreditCard(creditCard1);
+			creditCardRepository.save(creditCard1);
+
+			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2022-09-08"), CardColor.GOLD, CardType.DEBIT, "1234", client1, account1);
+			account1.addDebitCard(debitCard);
+			debitCardRepository.save(debitCard);
 
 			///
 

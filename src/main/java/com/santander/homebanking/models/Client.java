@@ -139,4 +139,12 @@ public class Client {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void addCreditCard(CreditCard creditCard) {
+        creditCard.setClient(this);
+        creditCards.add(creditCard);
+    }
+
+
+
 }

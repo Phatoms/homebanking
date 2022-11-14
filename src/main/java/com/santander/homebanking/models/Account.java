@@ -30,6 +30,9 @@ public class Account {
     @OneToMany(mappedBy="account", fetch=FetchType.EAGER)
     private Set<Transaction> transactions = new HashSet<>();
 
+    @OneToMany(mappedBy="account", fetch=FetchType.EAGER)
+    Set<DebitCard> debitCards = new HashSet<>();
+
     public Account(String number, LocalDate creationDate, Double balance) {
         this.number = number;
         this.creationDate = creationDate;
@@ -83,5 +86,10 @@ public class Account {
     public void addTransactions(Transaction transaction) {
         transaction.setAccount(this);
         transactions.add(transaction);
+    }
+
+    public void addDebitCard(DebitCard debitCard){
+        debitCard.setAccount(this);
+        debitCards.add(debitCard);
     }
 }
