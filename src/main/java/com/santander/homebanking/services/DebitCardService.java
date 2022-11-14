@@ -38,14 +38,14 @@ public class DebitCardService {
             return res;
         }
 
-        DebitCard creditCard = new DebitCard(card.getCardHolder(), card.getNumber(), card.getCvv(),
-                card.getFromDate(), card.getThruDate(), card.getColor(), card.getType(),card.getPin());
+//        DebitCard creditCard = new DebitCard(card.getCardHolder(), card.getNumber(), card.getCvv(),
+//                card.getFromDate(), card.getThruDate(), card.getColor(), card.getType(),card.getPin());
 
 
-        creditCardRepository.save(creditCard);
-        client.addCreditCards(creditCard);
-
-        clientRepository.save(client);
+//        creditCardRepository.save(creditCard);
+//        client.addCreditCards(creditCard);
+//
+//        clientRepository.save(client);
 
 
         return res;
