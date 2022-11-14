@@ -102,9 +102,9 @@ public class HomebankingApplication {
 			Card card2 = new Card("Admin","1925-6745-7876-4445", 220, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.SILVER, CardType.CREDIT, "pin" );
 			Card card3 = new Card("Admin","8889-6745-7876-4445", 350, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.DEBIT, "pin" );
 
-			client1.addCards(card1);
+/*			client1.addCards(card1);
 			client3.addCards(card2);
-			client3.addCards(card3);
+			client3.addCards(card3);*/
 
 			/// Modulo de prueba con card1
 			CreditCard creditCard = new CreditCard(card1.getCardHolder(), "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
@@ -120,9 +120,9 @@ public class HomebankingApplication {
 			accountRepository.save(account3);
 			accountRepository.save(account4);
 
-			cardRepository.save(card1);
+/*			cardRepository.save(card1);
 			cardRepository.save(card2);
-			cardRepository.save(card3);
+			cardRepository.save(card3);*/
 
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);

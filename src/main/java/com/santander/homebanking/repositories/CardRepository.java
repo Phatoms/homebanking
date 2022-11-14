@@ -11,7 +11,7 @@ import java.util.List;
 @RepositoryRestResource
 public interface CardRepository extends JpaRepository<Card, Long> {
 
-    List<Card> findByCardHolder (String cardHolder);
+/*    List<Card> findByCardHolder (String cardHolder);
 
     List<Card> findByNumber (String number);
 
@@ -24,6 +24,6 @@ public interface CardRepository extends JpaRepository<Card, Long> {
     List<String> findAllCardsString();
 
     @Query(value = "SELECT number,cvv,card_holder FROM Card WHERE type = 1 ORDER by cvv DESC", nativeQuery = true)
-    List<Card> findAllCardsDTO();
+    List<Card> findAllCardsDTO();*/
 
 }

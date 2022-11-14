@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
+@MappedSuperclass
 public class Card {
 
     @Id

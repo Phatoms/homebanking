@@ -1,14 +1,18 @@
 package com.santander.homebanking.models;
 
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 public class CreditCard extends Card{
     private Long maxLimit = 0L;
     private Long availableLimit = 0L;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id")
+    private Client client;
 
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<TransactionCreditCard> transactions = new HashSet<>();
