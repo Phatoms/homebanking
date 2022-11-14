@@ -120,16 +120,18 @@ public class Client {
         return debitCards;
     }
 
-    public void setDebitCards(Set<DebitCard> debitCards) {
-        this.debitCards = debitCards;
+    public void addDebitCards(DebitCard debitCard) {
+        debitCard.setClient(this);
+        debitCards.add(debitCard);
     }
 
     public Set<CreditCard> getCreditCards() {
         return creditCards;
     }
 
-    public void setCreditCards(Set<CreditCard> creditCards) {
-        this.creditCards = creditCards;
+    public void addCreditCards(CreditCard creditCard) {
+        creditCard.setClient(this);
+        creditCards.add(creditCard);
     }
 
     public String getPassword() {

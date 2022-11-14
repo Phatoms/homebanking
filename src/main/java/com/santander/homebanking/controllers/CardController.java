@@ -2,9 +2,15 @@ package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.dtos.CardSimpleDTO;
+import com.santander.homebanking.models.CardType;
 import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.services.CardService;
+import com.santander.homebanking.services.CreditCardService;
+import com.santander.homebanking.services.DebitCardService;
+import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,10 +26,20 @@ import java.util.Set;
 public class CardController {
 
     @Autowired
-    CardRepository cardRepository;
+    private CardRepository cardRepository;
 
     @Autowired
-    CardService cardService;
+    private CardService cardService;
+
+    @Autowired
+    private MessageSource messages;
+
+    @Autowired
+    private CreditCardService creditCardService;
+
+    @Autowired
+    private DebitCardService debitCardService;
+
 
     @GetMapping(value = "/cards/card-holder/{cardHolder}")
     public Set<CardDTO> getCardHolders(@PathVariable String cardHolder){
@@ -62,15 +78,32 @@ public class CardController {
     @PostMapping(value = "/clients/current/cards")
     public ResponseEntity<Object> addCard(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
                                           Authentication authentication) {
+        ResponseUtils res = new ResponseUtils(false, 400, "card.type.failure");
 
-        if (cardService.addCard(cardColor, cardType, authentication)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        try {
+            if (CardType.valueOf(cardType).equals(CardType.CREDIT)){
+                res = creditCardService.addCard(cardColor, cardType, authentication);
+            } else if (CardType.valueOf(cardType).equals(CardType.CREDIT)){
+                res = debitCardService.addCard(cardColor, cardType, authentication);
+            }
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
+        }
+
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         } else{
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         }
     }
 
-    @PostMapping(value = "/cards/payment")
+/*    @PostMapping(value = "/cards/payment")
     public ResponseEntity<Object> addPayment(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
                                           Authentication authentication) {
 
@@ -79,7 +112,7 @@ public class CardController {
         } else{
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-    }
+    }*/
 
 
 }

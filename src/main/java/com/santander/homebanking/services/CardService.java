@@ -23,6 +23,8 @@ public class CardService {
     private ClientRepository clientRepository;
     private final int MAX_CARDS_TYPE = 3;
 
+    private Client client;
+
 
     public Set<CardDTO> getCardHolders(String cardHolder){
 //        return cardRepository.findByCardHolder(cardHolder).stream().map(CardDTO::new).collect(Collectors.toSet());
@@ -55,9 +57,32 @@ public class CardService {
         return cardRepository.findAllCards().stream().map(CardSimpleDTO::new).collect(Collectors.toSet());
     }*/
 
-    public Boolean addCard(String cardColor, String cardType,
+    public CardDTO newBasicCard(String cardColor, String cardType,
                            Authentication authentication) {
 
+        Boolean result = validateCard(cardColor, cardType, authentication);
+
+        if (!result){
+            return null;
+        }
+
+        Integer cvv = CardUtils.getCvv();
+        String cardNumber = CardUtils.getCardNumber();
+
+        String cardHolder = client.getFirstName() + " " + client.getLastName();
+        LocalDate initialDate = LocalDate.now();
+        LocalDate thruDate = initialDate.plusYears(5);
+
+        CardDTO card = new CardDTO(-1L, cardHolder, cardNumber.toString(), cvv, initialDate, thruDate, CardColor.valueOf(cardColor),
+                CardType.valueOf(cardType), "pin", client);
+
+//        cardRepository.save(card);
+
+        return card;
+    }
+
+    public Boolean validateCard(String cardColor, String cardType,
+                             Authentication authentication){
         Boolean result = false;
         Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
 
@@ -79,21 +104,9 @@ public class CardService {
             return result;
         }
 
-        Integer cvv = CardUtils.getCvv();
-        String cardNumber = CardUtils.getCardNumber();
-
-        String cardHolder = client.getFirstName() + " " + client.getLastName();
-        LocalDate initialDate = LocalDate.now();
-        LocalDate thruDate = initialDate.plusYears(5);
-        Card card = new Card(cardHolder, cardNumber.toString(), cvv, initialDate, thruDate, CardColor.valueOf(cardColor),
-                CardType.valueOf(cardType), "pin");
-
-        card.setClient(client);
-        cardRepository.save(card);
-        result = true;
-
         return result;
     }
+
 
 
 
