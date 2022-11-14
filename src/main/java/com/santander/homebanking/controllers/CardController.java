@@ -44,7 +44,7 @@ public class CardController {
         }
     }
 
-    @GetMapping(value = "/cards")
+/*    @GetMapping(value = "/cards")
     public Set<CardDTO> findAllCards(){
         return cardService.findAllCards();
     }
@@ -57,7 +57,7 @@ public class CardController {
     @GetMapping(value = "/cards-dto")
     public Set<CardSimpleDTO> findAllCardsDTO(){
         return cardService.findAllCardsDTO();
-    }
+    }*/
 
     @PostMapping(value = "/clients/current/cards")
     public ResponseEntity<Object> addCard(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
@@ -69,4 +69,17 @@ public class CardController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+    @PostMapping(value = "/cards/payment")
+    public ResponseEntity<Object> addPayment(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
+                                          Authentication authentication) {
+
+        if (cardService.addCard(cardColor, cardType, authentication)){ // servicio.agregarpago();
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else{
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+
 }
