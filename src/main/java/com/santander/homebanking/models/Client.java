@@ -105,6 +105,10 @@ public class Client {
 
     public Set<Card> getCards() {
         Set<Card> cards = new HashSet<>();
+        Set<DebitCard> debitCards = new HashSet<>();
+        for ( Account account : this.accounts) {
+            Client.this.debitCards.addAll(account.getDebitCards());
+        }
         cards.addAll(debitCards);
         cards.addAll(creditCards);
 
@@ -144,7 +148,5 @@ public class Client {
         creditCard.setClient(this);
         creditCards.add(creditCard);
     }
-
-
 
 }

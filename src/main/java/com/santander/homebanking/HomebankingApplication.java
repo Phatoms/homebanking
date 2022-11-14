@@ -111,19 +111,18 @@ public class HomebankingApplication {
 
 			/// Modulo de prueba con card1
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
-
 			client1.addCreditCard(creditCard1);
-			creditCardRepository.save(creditCard1);
 
-			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2022-09-08"), CardColor.GOLD, CardType.DEBIT, "1234", client1, account1);
+			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
-			debitCardRepository.save(debitCard);
 
 			///
+
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
 			clientRepository.save(client3);
+
 
 			accountRepository.save(account1);
 			accountRepository.save(account2);
@@ -133,6 +132,10 @@ public class HomebankingApplication {
 /*			cardRepository.save(card1);
 			cardRepository.save(card2);
 			cardRepository.save(card3);*/
+
+			creditCardRepository.save(creditCard1);
+
+			debitCardRepository.save(debitCard);
 
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);
