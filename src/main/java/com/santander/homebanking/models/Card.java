@@ -32,9 +32,7 @@ public abstract class Card {
 
     private String pin;
 
-    @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
-    private Client client;
+
 
     public Card(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type, String pin) {
         this.cardHolder = cardHolder;
@@ -94,13 +92,6 @@ public abstract class Card {
         this.thruDate = thruDate;
     }
 
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     public CardColor getColor() {
         return color;

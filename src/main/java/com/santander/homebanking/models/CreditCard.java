@@ -10,16 +10,20 @@ public class CreditCard extends Card{
     private Long maxLimit = 0L;
     private Long availableLimit = 0L;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "client_id")
-    private Client client;
-
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<TransactionCreditCard> transactions = new HashSet<>();
 
+<<<<<<< HEAD
 
     public CreditCard() {
+=======
+    @ManyToOne (fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id")
+    private Client client;
+>>>>>>> dd5d18caff732b531a17d9dd8c965ad0219c6519
 
+    public CreditCard() {
+        super();
     }
     public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate,
                       CardColor color, CardType type, String pin, Long maxLimit, Long availableLimit) {
@@ -52,4 +56,13 @@ public class CreditCard extends Card{
     public void setTransactions(Set<TransactionCreditCard> transactions) {
         this.transactions = transactions;
     }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
 }
