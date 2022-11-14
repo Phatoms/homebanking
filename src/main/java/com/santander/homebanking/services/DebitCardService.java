@@ -1,20 +1,18 @@
 package com.santander.homebanking.services;
 
 import com.santander.homebanking.dtos.CardDTO;
-import com.santander.homebanking.models.Account;
-import com.santander.homebanking.models.Client;
-import com.santander.homebanking.models.CreditCard;
-import com.santander.homebanking.models.DebitCard;
+import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.AccountRepository;
 import com.santander.homebanking.repositories.ClientRepository;
-import com.santander.homebanking.repositories.CreditCardRepository;
 import com.santander.homebanking.repositories.DebitCardRepository;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DebitCardService {
@@ -35,11 +33,11 @@ public class DebitCardService {
 
     private Client client;
 
-    private Set<Account> accounts;
-    public ResponseUtils addCard(String cardColor, String cardType,
-                                 Authentication authentication) {
+    private Account account;
+    public ResponseUtils addCard(String cardColor, String accountNumber,
+                                 HttpSession session) {
 
-        ResponseUtils res = validateCreditCard(cardColor, cardType, authentication);
+        ResponseUtils res = validateDebitCard(cardColor, accountNumber, session);
 
         if (!res.getDone()){
             return res;
@@ -49,43 +47,42 @@ public class DebitCardService {
                 card.getFromDate(), card.getThruDate(), card.getColor(), card.getType(),card.getPin());
 
 
-/*
         debitCardRepository.save(debitCard);
-        client.addDebitCards(debitCard);
-        accounts.addDebitCards(debitCard);
 
-        clientRepository.save(client);
-        accountRepository.save(accounts);
-*/
+        account.addDebitCard(debitCard);
+        accountRepository.save(account);
 
         return res;
     }
 
-    public ResponseUtils validateCreditCard(String cardColor, String cardType,
-                                            Authentication authentication){
+    public ResponseUtils validateDebitCard(String cardColor, String accountNumber,
+                                           HttpSession session){
         ResponseUtils res = new ResponseUtils(true, 200, "card.validation.success");
-        card = cardService.newBasicCard(cardColor, cardType, authentication);
+        card = cardService.newBasicCard(cardColor, CardType.DEBIT, session);
 
         if (card == null){
             return new ResponseUtils(false, 400, "card.validation.failure");
         }
 
-
-        client = card.getClient();
+        client = (Client) session.getAttribute("client");
 
         if (client == null){
             return new ResponseUtils(false, 400, "card.validation.failure");
         }
 
-        accounts = client.getAccounts();
+        Set<Account> accounts = client.getAccounts();
 
         if (accounts == null) {
             return new ResponseUtils(false, 400, "card.validation.failure");
         }
 
+        account = accounts.stream().filter(account1 -> account1.getNumber().equals(accountNumber))
+                .collect(Collectors.toList()).get(0);
+
+        if (account == null){
+            return new ResponseUtils(false, 400, "card.validation.failure");
+        }
 
         return res;
     }
-
-
 }

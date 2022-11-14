@@ -23,12 +23,6 @@ public class Client {
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     Set<Account> accounts = new HashSet<>();
 
-/*    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private Set<Card> cards = new HashSet<>();*/
-
-    @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private Set<DebitCard> debitCards = new HashSet<>();
-
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
     private Set<CreditCard> creditCards = new HashSet<>();
 
@@ -105,28 +99,19 @@ public class Client {
 
     public Set<Card> getCards() {
         Set<Card> cards = new HashSet<>();
-        Set<DebitCard> debitCards = new HashSet<>();
-        for ( Account account : this.accounts) {
-            Client.this.debitCards.addAll(account.getDebitCards());
-        }
+        Set<DebitCard> debitCards = getDebitCards();
         cards.addAll(debitCards);
         cards.addAll(creditCards);
 
         return cards;
     }
 
-/*    public void addCards(Card card) {
-        card.setClient(this);
-        cards.add(card);
-    }*/
-
     public Set<DebitCard> getDebitCards() {
+        Set<DebitCard> debitCards = new HashSet<>();
+        for (Account account : this.accounts) {
+            debitCards.addAll(account.getDebitCards());
+        }
         return debitCards;
-    }
-
-    public void addDebitCards(DebitCard debitCard) {
-        debitCard.setClient(this);
-        debitCards.add(debitCard);
     }
 
     public Set<CreditCard> getCreditCards() {

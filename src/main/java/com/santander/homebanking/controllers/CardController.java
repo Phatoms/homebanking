@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
@@ -75,22 +76,11 @@ public class CardController {
         return cardService.findAllCardsDTO();
     }*/
 
-    @PostMapping(value = "/clients/current/cards")
-    public ResponseEntity<Object> addCard(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
-                                          Authentication authentication) {
-        ResponseUtils res = new ResponseUtils(false, 400, "card.type.failure");
-
-        try {
-            if (CardType.valueOf(cardType).equals(CardType.CREDIT)){
-                res = creditCardService.addCard(cardColor, cardType, authentication);
-            } else if (CardType.valueOf(cardType).equals(CardType.CREDIT)){
-                res = debitCardService.addCard(cardColor, cardType, authentication);
-            }
-        } catch (IllegalArgumentException e){
-            return new ResponseEntity<>(
-                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
-                    HttpStatus.valueOf(res.getStatusCode()));
-        }
+    @PostMapping(value = "/clients/current/creditCards")
+    public ResponseEntity<Object> addCreditCards(@RequestParam @NotBlank String cardColor,
+                                                 @RequestParam Long maxLimit,
+                                                 HttpSession session) {
+        ResponseUtils res = creditCardService.addCard(cardColor, maxLimit, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -103,16 +93,21 @@ public class CardController {
         }
     }
 
-/*    @PostMapping(value = "/cards/payment")
-    public ResponseEntity<Object> addPayment(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
-                                          Authentication authentication) {
+    @PostMapping(value = "/clients/current/debitCards")
+    public ResponseEntity<Object> addDebitCards(@RequestParam @NotBlank String cardColor,
+                                                @RequestParam @NotBlank String accountNumber,
+                                                HttpSession session) {
+        ResponseUtils res = debitCardService.addCard(cardColor, accountNumber, session);
 
-        if (cardService.addCard(cardColor, cardType, authentication)){ // servicio.agregarpago();
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         } else{
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         }
-    }*/
-
+    }
 
 }

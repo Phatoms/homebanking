@@ -13,14 +13,9 @@ public class CreditCard extends Card{
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<TransactionCreditCard> transactions = new HashSet<>();
 
-<<<<<<< HEAD
-
-    public CreditCard() {
-=======
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     private Client client;
->>>>>>> dd5d18caff732b531a17d9dd8c965ad0219c6519
 
     public CreditCard() {
         super();

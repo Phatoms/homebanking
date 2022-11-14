@@ -27,7 +27,6 @@ public class CardDTO {
 
     private String pin;
 
-    private Client client;
 
     public CardDTO(Card card) {
         this.id = card.getId();
@@ -39,11 +38,10 @@ public class CardDTO {
         this.color = card.getColor();
         this.type = card.getType();
         this.pin = card.getPin();
-        this.client = card.getClient();
     }
 
     public CardDTO(Long id, String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate,
-                   CardColor color, CardType type, String pin, Client client) {
+                   CardColor color, CardType type, String pin) {
         this.id = id;
         this.cardHolder = cardHolder;
         this.number = number;
@@ -53,7 +51,6 @@ public class CardDTO {
         this.color = color;
         this.type = type;
         this.pin = pin;
-        this.client = client;
     }
 
     public Long getId() {
@@ -86,10 +83,6 @@ public class CardDTO {
 
     public CardType getType() {
         return type;
-    }
-
-    public Client getClient() {
-        return client;
     }
 
     public String getPin() {

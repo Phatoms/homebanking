@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,10 +58,10 @@ public class CardService {
         return cardRepository.findAllCards().stream().map(CardSimpleDTO::new).collect(Collectors.toSet());
     }*/
 
-    public CardDTO newBasicCard(String cardColor, String cardType,
-                           Authentication authentication) {
+    public CardDTO newBasicCard(String cardColor, CardType cardType,
+                                HttpSession session) {
 
-        Boolean result = validateCard(cardColor, cardType, authentication);
+        Boolean result = validateCard(cardColor, cardType, session);
 
         if (!result){
             return null;
@@ -74,36 +75,29 @@ public class CardService {
         LocalDate thruDate = initialDate.plusYears(5);
 
         CardDTO card = new CardDTO(-1L, cardHolder, cardNumber.toString(), cvv, initialDate, thruDate, CardColor.valueOf(cardColor),
-                CardType.valueOf(cardType), "pin", client);
+                cardType, "pin");
 
 //        cardRepository.save(card);
 
         return card;
     }
 
-    public Boolean validateCard(String cardColor, String cardType,
-                             Authentication authentication){
+    public Boolean validateCard(String cardColor, CardType cardType,
+                             HttpSession session){
         Boolean result = false;
-        Client client = clientRepository.findByEmail(authentication.getName()).orElse(null);
+        client = (Client) session.getAttribute("client");
 
         if(client == null){
             return result;
         }
 
-        try {
-            CardColor.valueOf(cardColor);
-            CardType.valueOf(cardType);
-        } catch (IllegalArgumentException e){
-            return result;
-        }
-
-
         Long numTarjetasMismoTipo = client.getCards().stream().
-                filter(card -> card.getType() == CardType.valueOf(cardType)).count();
+                filter(card -> card.getType() == cardType).count();
         if (numTarjetasMismoTipo >= 3){
             return result;
         }
 
+        result = true;
         return result;
     }
 

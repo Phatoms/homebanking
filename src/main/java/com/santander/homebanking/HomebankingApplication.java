@@ -112,12 +112,7 @@ public class HomebankingApplication {
 			client3.addCards(card3);*/
 
 			/// Modulo de prueba con card1
-<<<<<<< HEAD
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200L, 200L);
-
-=======
-			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234");
->>>>>>> dd5d18caff732b531a17d9dd8c965ad0219c6519
 			client1.addCreditCard(creditCard1);
 
 			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
