@@ -17,13 +17,13 @@ public class CreditCard extends Card{
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<TransactionCreditCard> transactions = new HashSet<>();
 
+    public CreditCard() {
+
+    }
     public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type, String pin) {
         super(cardHolder, number, cvv, fromDate, thruDate, color, type, pin);
     }
 
-    public CreditCard() {
-
-    }
 
     public Long getMaxLimit() {
         return maxLimit;
