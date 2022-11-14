@@ -24,11 +24,9 @@ public class ClientDTO {
 
     private Set<ClientLoanDTO> loans;
 
-    private Set<CardDTO> cards;
+    private Set<CreditCardDTO> creditCards;
 
     private Set<DebitCardDTO> debitCards;
-
-    private Set<CreditCardDTO> creditCards;
 
 
     public ClientDTO(Client client) {
@@ -44,10 +42,9 @@ public class ClientDTO {
 
         this.loans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(Collectors.toSet());
 
-        this.debitCards = client.getDebitCards().stream().map(DebitCardDTO::new).collect(Collectors.toSet());
-
         this.creditCards = client.getCreditCards().stream().map(CreditCardDTO::new).collect(Collectors.toSet());
 
+        this.debitCards = client.getDebitCards().stream().map(DebitCardDTO::new).collect(Collectors.toSet());
     }
 
     public long getId() {
@@ -76,14 +73,6 @@ public class ClientDTO {
 
     public void setAccounts(Set<AccountDTO> accounts) {
         this.accounts = accounts;
-    }
-
-    public Set<CardDTO> getCards() {
-        return cards;
-    }
-
-    public Set<DebitCardDTO> getDebitCards() {
-        return debitCards;
     }
 
     public Set<CreditCardDTO> getCreditCards() {

@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @MappedSuperclass
-public class Card {
+public abstract class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")

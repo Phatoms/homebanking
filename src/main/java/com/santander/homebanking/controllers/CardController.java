@@ -2,15 +2,22 @@ package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.dtos.CardSimpleDTO;
+import com.santander.homebanking.models.CardType;
 import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.services.CardService;
+import com.santander.homebanking.services.CreditCardService;
+import com.santander.homebanking.services.DebitCardService;
+import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
@@ -20,10 +27,20 @@ import java.util.Set;
 public class CardController {
 
     @Autowired
-    CardRepository cardRepository;
+    private CardRepository cardRepository;
 
     @Autowired
-    CardService cardService;
+    private CardService cardService;
+
+    @Autowired
+    private MessageSource messages;
+
+    @Autowired
+    private CreditCardService creditCardService;
+
+    @Autowired
+    private DebitCardService debitCardService;
+
 
     @GetMapping(value = "/cards/card-holder/{cardHolder}")
     public Set<CardDTO> getCardHolders(@PathVariable String cardHolder){
@@ -59,27 +76,38 @@ public class CardController {
         return cardService.findAllCardsDTO();
     }*/
 
-    @PostMapping(value = "/clients/current/cards")
-    public ResponseEntity<Object> addCard(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
-                                          Authentication authentication) {
+    @PostMapping(value = "/clients/current/creditCards")
+    public ResponseEntity<Object> addCreditCards(@RequestParam @NotBlank String cardColor,
+                                                 @RequestParam Long maxLimit,
+                                                 HttpSession session) {
+        ResponseUtils res = creditCardService.addCard(cardColor, maxLimit, session);
 
-        if (cardService.addCard(cardColor, cardType, authentication)){
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         } else{
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         }
     }
 
-    @PostMapping(value = "/cards/payment")
-    public ResponseEntity<Object> addPayment(@RequestParam @NotBlank String cardColor, @RequestParam @NotBlank String cardType,
-                                          Authentication authentication) {
+    @PostMapping(value = "/clients/current/debitCards")
+    public ResponseEntity<Object> addDebitCards(@RequestParam @NotBlank String cardColor,
+                                                @RequestParam @NotBlank String accountNumber,
+                                                HttpSession session) {
+        ResponseUtils res = debitCardService.addCard(cardColor, accountNumber, session);
 
-        if (cardService.addCard(cardColor, cardType, authentication)){ // servicio.agregarpago();
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         } else{
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         }
     }
-
 
 }

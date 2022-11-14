@@ -3,6 +3,7 @@ package com.santander.homebanking.dtos;
 import com.santander.homebanking.models.Card;
 import com.santander.homebanking.models.CardColor;
 import com.santander.homebanking.models.CardType;
+import com.santander.homebanking.models.Client;
 
 import javax.persistence.Column;
 import java.time.LocalDate;
@@ -24,6 +25,9 @@ public class CardDTO {
 
     private CardType type;
 
+    private String pin;
+
+
     public CardDTO(Card card) {
         this.id = card.getId();
         this.cardHolder = card.getCardHolder();
@@ -33,6 +37,20 @@ public class CardDTO {
         this.thruDate = card.getThruDate();
         this.color = card.getColor();
         this.type = card.getType();
+        this.pin = card.getPin();
+    }
+
+    public CardDTO(Long id, String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate,
+                   CardColor color, CardType type, String pin) {
+        this.id = id;
+        this.cardHolder = cardHolder;
+        this.number = number;
+        this.cvv = cvv;
+        this.fromDate = fromDate;
+        this.thruDate = thruDate;
+        this.color = color;
+        this.type = type;
+        this.pin = pin;
     }
 
     public Long getId() {
@@ -65,5 +83,9 @@ public class CardDTO {
 
     public CardType getType() {
         return type;
+    }
+
+    public String getPin() {
+        return pin;
     }
 }

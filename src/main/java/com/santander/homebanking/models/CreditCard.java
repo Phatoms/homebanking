@@ -20,8 +20,11 @@ public class CreditCard extends Card{
     public CreditCard() {
         super();
     }
-    public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate, CardColor color, CardType type, String pin) {
+    public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate,
+                      CardColor color, CardType type, String pin, Long maxLimit, Long availableLimit) {
         super(cardHolder, number, cvv, fromDate, thruDate, color, type, pin);
+        this.maxLimit = maxLimit;
+        this.availableLimit = availableLimit;
     }
 
 
