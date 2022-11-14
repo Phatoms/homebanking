@@ -25,21 +25,24 @@ public class CardService {
 
 
     public Set<CardDTO> getCardHolders(String cardHolder){
-        return cardRepository.findByCardHolder(cardHolder).stream().map(CardDTO::new).collect(Collectors.toSet());
+//        return cardRepository.findByCardHolder(cardHolder).stream().map(CardDTO::new).collect(Collectors.toSet());
+        return null;
     }
 
     public Set<CardDTO> getCardByNumber(String number){
-        return cardRepository.findByNumber(number).stream().map(CardDTO::new).collect(Collectors.toSet());
+/*        return cardRepository.findByNumber(number).stream().map(CardDTO::new).collect(Collectors.toSet());*/
+        return null;
     }
 
     public Set<CardDTO> getCardByCardType(String cardType){
         try {
-            return cardRepository.findByType(CardType.valueOf(cardType)).stream().map(CardDTO::new).collect(Collectors.toSet());
+//            return cardRepository.findByType(CardType.valueOf(cardType)).stream().map(CardDTO::new).collect(Collectors.toSet());
+            return null;
         }catch (IllegalArgumentException e){
             return null;
         }
     }
-
+/*
     public Set<CardDTO> findAllCards(){
         return cardRepository.findAllCards().stream().map(CardDTO::new).collect(Collectors.toSet());
     }
@@ -50,7 +53,7 @@ public class CardService {
 
     public Set<CardSimpleDTO> findAllCardsDTO(){
         return cardRepository.findAllCards().stream().map(CardSimpleDTO::new).collect(Collectors.toSet());
-    }
+    }*/
 
     public Boolean addCard(String cardColor, String cardType,
                            Authentication authentication) {

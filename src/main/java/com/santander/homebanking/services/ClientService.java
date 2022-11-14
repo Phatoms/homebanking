@@ -55,7 +55,8 @@ public class ClientService {
 
     public Set<ClientDTO> getClientsHasTypeCards(String cardColor) throws IllegalArgumentException{
         try {
-            return clientRepository.findByCardsColor(CardColor.valueOf(cardColor)).stream().map(ClientDTO::new).collect(Collectors.toSet());
+/*            return clientRepository.findByCardsColor(CardColor.valueOf(cardColor)).stream().map(ClientDTO::new).collect(Collectors.toSet());*/
+            return null;
         }catch (IllegalArgumentException e){
             throw new IllegalArgumentException();
         }

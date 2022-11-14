@@ -14,7 +14,7 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     List<Client> findByFirstNameOrderByLastNameDesc(String name);
 
-    List<Client> findByCardsColor(CardColor cardColor);
+/*    List<Client> findByCardsColor(CardColor cardColor);*/
 
     List<Client> findDistinctByClientLoansAmountGreaterThan(Double amount);
 
