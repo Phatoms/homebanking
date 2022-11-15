@@ -18,4 +18,9 @@ public final class CardUtils {
                 "-" +   (int)((Math.random() * (9999 - 1000)) + 1000);
         return cardNumber;
     }
+
+    public static String generateToken(){
+        String token = String.valueOf((int)((Math.random() * (999999 - 100000)) + 100000));
+        return token;
+    }
 }

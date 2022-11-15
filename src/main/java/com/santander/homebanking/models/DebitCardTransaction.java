@@ -9,10 +9,13 @@ import java.time.LocalDateTime;
 @Entity
 public class DebitCardTransaction extends CardTransaction{
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="account_id")
     private Account account;
 
-    public DebitCardTransaction(Double amount, String description, LocalDateTime time, Account account) {
-        super(amount, description, time);
+    public DebitCardTransaction(Double amount, String description, LocalDateTime time, String token, Status status, Account account) {
+        super(amount, description, time, token, status);
         this.account = account;
     }
 
@@ -21,5 +24,9 @@ public class DebitCardTransaction extends CardTransaction{
 
     public Account getAccount() {
         return account;
+    }
+
+    public void addAccount(Account account){
+        this.account = account;
     }
 }

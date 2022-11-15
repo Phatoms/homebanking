@@ -10,11 +10,11 @@ public class CreditCardTransaction extends CardTransaction{
     private Float interestRate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "credit_card_transaction")
+    @JoinColumn(name = "credit_card_id")
     private CreditCard creditCard;
 
-    public CreditCardTransaction(Double amount, String description, LocalDateTime time, Integer payments, Float interestRate, CreditCard creditCard) {
-        super(amount, description, time);
+    public CreditCardTransaction(Double amount, String description, LocalDateTime time, String token, Status status, Integer payments, Float interestRate, CreditCard creditCard) {
+        super(amount, description, time, token, status);
         this.payments = payments;
         this.interestRate = interestRate;
         this.creditCard = creditCard;

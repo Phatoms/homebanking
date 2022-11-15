@@ -100,25 +100,12 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 = new ClientLoan(100000.0, 24, client3, loan2);
 			ClientLoan clientLoan4 = new ClientLoan(200000.0, 36, client3, loan3);
 
-/*
-			Card card1 = new Card("Tomas Quinteros","3325-6745-7876-4445", 990, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.CREDIT, "pin");
-			Card card2 = new Card("Admin","1925-6745-7876-4445", 220, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.SILVER, CardType.CREDIT, "pin" );
-			Card card3 = new Card("Admin","8889-6745-7876-4445", 350, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.DEBIT, "pin" );
-*/
-
-/*			client1.addCards(card1);
-			client3.addCards(card2);
-			client3.addCards(card3);*/
-
 			/// Modulo de prueba con card1
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200L, 200L);
 			client1.addCreditCard(creditCard1);
 
 			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
-
-			///
-
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
@@ -129,10 +116,6 @@ public class HomebankingApplication {
 			accountRepository.save(account2);
 			accountRepository.save(account3);
 			accountRepository.save(account4);
-
-/*			cardRepository.save(card1);
-			cardRepository.save(card2);
-			cardRepository.save(card3);*/
 
 			creditCardRepository.save(creditCard1);
 
