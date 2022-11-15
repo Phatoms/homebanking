@@ -3,7 +3,9 @@ package com.santander.homebanking.controllers;
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.dtos.CardSimpleDTO;
 import com.santander.homebanking.models.*;
+import com.santander.homebanking.repositories.AccountRepository;
 import com.santander.homebanking.repositories.CardRepository;
+import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.repositories.DebitCardTransactionRepository;
 import com.santander.homebanking.services.CardService;
 import com.santander.homebanking.services.CreditCardService;
@@ -20,7 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,9 +34,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 @Validated
 public class CardController {
-
-    @Autowired
-    private CardRepository cardRepository;
 
     @Autowired
     private CardService cardService;
@@ -68,21 +70,6 @@ public class CardController {
         }
     }
 
-/*    @GetMapping(value = "/cards")
-    public Set<CardDTO> findAllCards(){
-        return cardService.findAllCards();
-    }
-
-    @GetMapping(value = "/cards-string")
-    public Set<String> findAllCardsString(){
-        return cardService.findAllCardsString();
-    }
-
-    @GetMapping(value = "/cards-dto")
-    public Set<CardSimpleDTO> findAllCardsDTO(){
-        return cardService.findAllCardsDTO();
-    }*/
-
     @PostMapping(value = "/clients/current/creditCards")
     public ResponseEntity<Object> addCreditCards(@RequestParam @NotBlank String cardColor,
                                                  @RequestParam Long maxLimit,
@@ -116,6 +103,49 @@ public class CardController {
                     HttpStatus.valueOf(res.getStatusCode()));
         }
     }
+    
+    
+    ///Metodo para la recepcion de pagos usando tarjetas de credito
+    @PostMapping(value = "/clients/current/creditCards/pay")
+    public ResponseEntity<Object> newCreditCardTransaction(@RequestParam String cardNumberCredit,
+                                                           @RequestParam String cardHolder,
+                                                           @RequestParam String description,
+                                                           @RequestParam Double amount,
+                                                           @RequestParam Integer cvv,
+                                                           @RequestParam String thruDate,
+                                                           HttpSession session){
+
+
+        ResponseUtils res = creditCardService.createPendingCreditCardTransaction(cardNumberCredit, cardHolder, amount, description,
+                6, cvv, thruDate, session);
+
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    res.getArgs()[0],
+                    HttpStatus.valueOf(res.getStatusCode()));
+        } else{
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
+        }
+    }
+
+    //Confrimamos el pago de la tarjeta de credito
+
+    public ResponseEntity<Object> validateCreditCardTransaction(@RequestParam Long id, @RequestParam String token){
+        ResponseUtils res = creditCardService.validateCreditCardTransaction(id, token);
+
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    res.getArgs()[0],
+                    HttpStatus.valueOf(res.getStatusCode()));
+        } else{
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
+        }
+    }
+
 
     // Pagar con debito, pasar cvv, pin   pre transaccion return id de la transaccion
     @PostMapping(value = "/clients/current/debitCards/pagar")
@@ -124,9 +154,10 @@ public class CardController {
                                                       @RequestParam  String description,
                                                       @RequestParam  Double amount,
                                                       @RequestParam  Integer cvv,
+                                                      @RequestParam String thruDate,
                                                       HttpSession session){
 
-        ResponseUtils res = debitCardService.createTransaction(numberCardDebit,carhHolder, description, amount, cvv, session);
+        ResponseUtils res = debitCardService.createPreTransaction(numberCardDebit,carhHolder, description, amount, cvv, thruDate, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -139,20 +170,21 @@ public class CardController {
         }
 
     }
-    @PatchMapping(value = "/clients/current/debitCards/{id}")
-    public ResponseEntity<Object> confirmTransaction(@PathVariable Long id){
-        DebitCardTransaction transaction = debitCardTransactionRepository.findById(id).orElse(null);
+    @PostMapping(value = "/clients/current/debitCards/confirm")
+    public ResponseEntity<Object> confirmTransaction(@RequestParam Long id,
+                                                     @RequestParam String token,
+                                                     HttpSession session){
 
+        ResponseUtils res = debitCardService.confirmTransaction(id, token, session);
 
-        if(transaction == null){
-            return new ResponseEntity<>("Ups ocurrio un error, no se encuentra la transaccion", HttpStatus.FORBIDDEN);
+        if (res.getDone()){
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
+        } else{
+            return new ResponseEntity<>(
+                    messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
+                    HttpStatus.valueOf(res.getStatusCode()));
         }
-        // Si encontro la transaccion, se completa restando a la cuenta el monto...
-        Account accounToDebit = transaction.getAccount();
-        accounToDebit.setBalance(accounToDebit.getBalance() - transaction.getAmount());
-        transaction.setStatus(Status.PASSED);
-
-        return new ResponseEntity<>("Transaccion confirmada.", HttpStatus.ACCEPTED);
     }
-
 }

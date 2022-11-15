@@ -20,9 +20,6 @@ public class HomebankingApplication {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@Autowired
-	EmailSenderService emailSenderService;
-
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
@@ -40,7 +37,7 @@ public class HomebankingApplication {
 	){
 		return (args) -> {
 
-			Client client1 = new Client("tomas", "quinteros", "tomas@mindhub.com", passwordEncoder.encode("password1"));
+			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("password1"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
 
@@ -142,10 +139,6 @@ public class HomebankingApplication {
 			transactionRepository.save(t6);
 			transactionRepository.save(t7);
 			transactionRepository.save(t8);
-
-			emailSenderService.sendEmail("tomas.quinteros35@gmail.com", "Token de confirmacion",
-					client1.getFirstName(),
-					creditCard1.getType().toString(), "A-239423");
 
 		};
 	}
