@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 @Entity
 public class DebitCardTransaction extends CardTransaction{
 
-    private Account account;
+//    private Account account;
 
     public DebitCardTransaction(Double amount, String description, LocalDateTime time, Account account) {
         super(amount, description, time);
-        this.account = account;
+//        this.account = account;
     }
 
     public DebitCardTransaction() {
     }
 
-    public Account getAccount() {
-        return account;
-    }
+//    public Account getAccount() {
+//        return account;
+//    }
 }
