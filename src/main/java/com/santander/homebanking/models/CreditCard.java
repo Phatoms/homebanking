@@ -11,7 +11,7 @@ public class CreditCard extends Card{
     private Long availableLimit = 0L;
 
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
-    Set<TransactionCreditCard> transactions = new HashSet<>();
+    Set<CreditCardTransaction> creditCardTransactions = new HashSet<>();
 
     @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
@@ -44,12 +44,12 @@ public class CreditCard extends Card{
         this.availableLimit = availableLimit;
     }
 
-    public Set<TransactionCreditCard> getTransactions() {
-        return transactions;
+    public Set<CreditCardTransaction> getTransactions() {
+        return creditCardTransactions;
     }
 
-    public void setTransactions(Set<TransactionCreditCard> transactions) {
-        this.transactions = transactions;
+    public void setTransactions(Set<CreditCardTransaction> creditCardTransactions) {
+        this.creditCardTransactions = creditCardTransactions;
     }
 
     public Client getClient() {

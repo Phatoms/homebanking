@@ -32,8 +32,7 @@ public class HomebankingApplication {
 									  AccountRepository accountRepository,
 									  LoanRepository loanRepository,
 									  ClientLoansRepository clientLoansRepository,
-									  TransactionRepository transactionRepository,
-									  TransactionCreditCardRepository transactionCreditCardRepository
+									  TransactionRepository transactionRepository
 	){
 		return (args) -> {
 
