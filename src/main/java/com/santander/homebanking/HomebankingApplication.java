@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -33,7 +35,8 @@ public class HomebankingApplication {
 									  AccountRepository accountRepository,
 									  LoanRepository loanRepository,
 									  ClientLoansRepository clientLoansRepository,
-									  TransactionRepository transactionRepository
+									  TransactionRepository transactionRepository,
+									  InterestRateRepository interestRateRepository
 	){
 		return (args) -> {
 
@@ -107,6 +110,14 @@ public class HomebankingApplication {
 
 			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2021-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
+
+			Double baseInterestRate = 0.0;
+			for (int i = 1; i < 25; i++){
+				baseInterestRate += 0.005;
+				baseInterestRate = new BigDecimal(baseInterestRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				InterestRate interestRate = new InterestRate(i, baseInterestRate);
+				interestRateRepository.save(interestRate);
+			}
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
