@@ -50,6 +50,7 @@ public class CreditCardService {
     private Client client;
 
     private CreditCard clientCreditCard;
+    private InterestRate interestRate;
     public ResponseUtils addCard(String cardColor, Double maxLimit,
                                  HttpSession session) {
 
@@ -99,12 +100,12 @@ public class CreditCardService {
                                                   String cardNumber,
                                                   Double amount,
                                                   String description,
-                                                  int payments,
+                                                  Integer payments,
                                                   Integer cvv,
                                                   String thruDate,
                                                   HttpSession session){
 
-        ResponseUtils res = validateCreditCardData(cardHolder, cardNumber, amount, cvv, thruDate, session);
+        ResponseUtils res = validateCreditCardData(cardHolder, cardNumber, amount, cvv, thruDate, payments, session);
 
         if(!res.getDone()){
             return res;
@@ -112,10 +113,8 @@ public class CreditCardService {
 
         String token = CardUtils.generateToken();
 
-        Float interestRate = 0f;
-
         CreditCardTransaction newCreditCardTransaction = new CreditCardTransaction(amount, description,
-                LocalDateTime.now(), token, Status.PENDING, payments, interestRate,clientCreditCard);
+                LocalDateTime.now(), token, Status.PENDING, payments, interestRate.getInterestRate(),clientCreditCard);
 
         creditCardTransactionRepository.save(newCreditCardTransaction);
 
@@ -171,6 +170,7 @@ public class CreditCardService {
                                                 Double amount,
                                                 Integer cvv,
                                                 String thruDate,
+                                                Integer payments,
                                                 HttpSession session){
 
         ResponseUtils res = new ResponseUtils(true, 200, "card.pretransaction.validate.success");
@@ -213,6 +213,11 @@ public class CreditCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongCvv");
         }
 
+        interestRate = interestRateRepository.findByFeeNumber(payments).orElse(null);
+        if (interestRate == null){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrong-interest-rate");
+        }
+
 
         return res;
     }
@@ -229,12 +234,15 @@ public class CreditCardService {
                 return new HashMap<>();
             }
 
-            Double totalAmount = feesDTO.getAmount() * Math.pow(1 + interestRate.getInterestRate(), interestRate.getFeeNumber());
-            Double fee = new BigDecimal(totalAmount/payments).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            Double amount = feesDTO.getAmount();
+
+            Double fee = CardUtils.getFee(payments, interestRate, amount);
             fees.put(String.valueOf(payments), fee);
         }
 
         return fees;
 
     }
+
+
 }
