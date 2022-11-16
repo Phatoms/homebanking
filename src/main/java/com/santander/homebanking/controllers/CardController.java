@@ -2,6 +2,7 @@ package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.dtos.CardSimpleDTO;
+import com.santander.homebanking.dtos.FeesDTO;
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.AccountRepository;
 import com.santander.homebanking.repositories.CardRepository;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -106,7 +108,7 @@ public class CardController {
     
     
     ///Metodo para la recepcion de pagos usando tarjetas de credito
-    @PostMapping(value = "/clients/current/creditCards/pagar")
+    @PostMapping(value = "/clients/current/creditCards/pay")
     public ResponseEntity<Object> newCreditCardTransaction(@RequestParam String cardNumberCredit,
                                                            @RequestParam String cardHolder,
                                                            @RequestParam String description,
@@ -133,7 +135,7 @@ public class CardController {
 
     //Confrimamos el pago de la tarjeta de credito
     @PostMapping(value = "/clients/current/creditCards/confirm")
-    public ResponseEntity<Object> validateCreditCardTransaction(@RequestParam Long id, @RequestParam String token,
+    public ResponseEntity<Object> confirmCreditCardTransaction(@RequestParam Long id, @RequestParam String token,
                                                                 HttpSession session){
         ResponseUtils res = creditCardService.validateCreditCardTransaction(id, token, session);
 
@@ -150,7 +152,7 @@ public class CardController {
 
 
     // Pagar con debito, pasar cvv, pin   pre transaccion return id de la transaccion
-    @PostMapping(value = "/clients/current/debitCards/pagar")
+    @PostMapping(value = "/clients/current/debitCards/pay")
     public ResponseEntity<Object> newDebitCardTransaction(@RequestParam  String numberCardDebit,
                                                           @RequestParam  String cardHolder,
                                                           @RequestParam  String description,
@@ -173,7 +175,7 @@ public class CardController {
 
     }
     @PostMapping(value = "/clients/current/debitCards/confirm")
-    public ResponseEntity<Object> validateDebitCardTransaction(@RequestParam Long id,
+    public ResponseEntity<Object> confirmDebitCardTransaction(@RequestParam Long id,
                                                                @RequestParam String token,
                                                                HttpSession   session){
 
@@ -188,5 +190,14 @@ public class CardController {
                     messages.getMessage(res.getMessage(), res.getArgs(), LocaleContextHolder.getLocale()),
                     HttpStatus.valueOf(res.getStatusCode()));
         }
+    }
+
+    @GetMapping(value = "/clients/current/creditCards/fees")
+    public HashMap<String, Double> getFees(@RequestBody FeesDTO feesDTO){
+
+        HashMap<String, Double> fees = creditCardService.getFees(feesDTO);
+
+        return fees;
+
     }
 }
