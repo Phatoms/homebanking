@@ -143,7 +143,7 @@ public class CreditCardService {
         CreditCardTransaction transaction = creditCardTransactionRepository.findById(id).orElse(null);
 
         if(transaction==null){
-            return new ResponseUtils(false, 403, "transaction.validation.failure.noExist");
+            return new ResponseUtils(false, 403, "pre-transaction.validation.failure.noExist");
         }
 
         if (transaction.getStatus().equals(Status.PASSED) || transaction.getStatus().equals(Status.REJECTED)){
@@ -151,7 +151,7 @@ public class CreditCardService {
         }
 
         if(!transaction.getToken().equals(token)){
-            return new ResponseUtils(false, 403, "transaction.validation.failure.invalidToken");
+            return new ResponseUtils(false, 403, "transaction.validation.failure.transaction-wrong-token");
         }
 
         transaction.setStatus(Status.PASSED);
