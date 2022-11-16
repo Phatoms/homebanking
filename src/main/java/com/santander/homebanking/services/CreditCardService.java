@@ -10,6 +10,7 @@ import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -200,4 +201,27 @@ public class CreditCardService {
 
         return res;
     }
+
+    @Scheduled(cron = "1 * * * * *")
+    public void chanceToReject(){
+        // me traigo todas
+        List<CreditCardTransaction> setTransactions = creditCardTransactionRepository.findAll();
+
+        // las recorro y veo si tienen pendiente, y paso mas de x min... lo cambio a reject
+        for (CreditCardTransaction transaction : setTransactions) {
+            if(transaction.getStatus() == Status.PENDING){
+
+                if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 2) {
+//                if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 30) {
+                    if (LocalDateTime.now().getHour() - transaction.getTime().getHour() > 0) {
+                        // Como se me ocurrio sabes el tiempo de dif... no verifique en cambio de dias...
+                        transaction.setStatus(Status.REJECT);
+                    }
+                }
+            }
+            creditCardTransactionRepository.save(transaction);
+        }
+
+    }
+
 }
