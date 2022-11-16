@@ -23,7 +23,11 @@ import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -158,11 +162,11 @@ public class DebitCardService {
     }
 
     public ResponseUtils validatePreTransactionDebit(String numberCardDebit,
-                                               String carhHolder,
-                                               Double amount,
-                                               Integer cvv,
-                                               String thruDate,
-                                               HttpSession session){
+                                                     String carhHolder,
+                                                     Double amount,
+                                                     Integer cvv,
+                                                     String thruDate,
+                                                     HttpSession session){
 
         ResponseUtils res = new ResponseUtils(true, 200, "card.pretransaction.validate.success");
 
@@ -188,19 +192,18 @@ public class DebitCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongCvv");
         }
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
-        LocalDate formattedThruDate = LocalDate.parse((CharSequence) dateTimeFormatter.parse(thruDate));
 
-//        LocalDate thruDateCard = (LocalDate) dateTimeFormatter.parse(debitCardToDebit.getThruDate().toString());
-        LocalDate thruDateCard = LocalDate.parse(debitCardToDebit.getThruDate().format(dateTimeFormatter));
+        String thruDateCard = debitCardToDebit.getThruDate().toString().substring(0,7);
 
-        if(!(thruDateCard.isEqual(formattedThruDate))){
+        if(!(thruDateCard.equals(thruDate))){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongThruDate");
         }
+
 
         if(debitCardToDebit.getThruDate().isBefore(LocalDate.now())){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.cardExpired");
         }
+
         Set<Account> setAccountClient = client.getAccounts();
 
         if(setAccountClient.size() == 0){
@@ -212,8 +215,6 @@ public class DebitCardService {
         if(amount > accountToDebit.getBalance()){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.insufficentMoney");
         }
-
-
 
         return res;
     }
@@ -250,6 +251,10 @@ public class DebitCardService {
 
         if(transaction == null){
             return new ResponseUtils(false, 400, "transaction.validation.failure.transaction-missing");
+        }
+
+        if (transaction.getStatus().equals(Status.PASSED) || transaction.getStatus().equals(Status.REJECTED)){
+            return new ResponseUtils(false, 403, "transaction.validation.failure.transaction-invalid");
         }
 
         if(!(transaction.getToken().equals(token))){

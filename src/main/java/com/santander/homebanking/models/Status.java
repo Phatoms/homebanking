@@ -1,7 +1,7 @@
 package com.santander.homebanking.models;
 
 public enum Status {
-    REJECT,
+    REJECTED,
     PENDING,
     PASSED
 }

@@ -7,8 +7,8 @@ import java.util.Set;
 
 @Entity
 public class CreditCard extends Card{
-    private Long maxLimit = 0L;
-    private Long availableLimit = 0L;
+    private Double maxLimit = 0.0;
+    private Double availableLimit = 0.0;
 
     @OneToMany(mappedBy = "creditCard", fetch = FetchType.EAGER)
     Set<CreditCardTransaction> creditCardTransactions = new HashSet<>();
@@ -21,26 +21,26 @@ public class CreditCard extends Card{
         super();
     }
     public CreditCard(String cardHolder, String number, Integer cvv, LocalDate fromDate, LocalDate thruDate,
-                      CardColor color, CardType type, String pin, Long maxLimit, Long availableLimit) {
+                      CardColor color, CardType type, String pin, Double maxLimit, Double availableLimit) {
         super(cardHolder, number, cvv, fromDate, thruDate, color, type, pin);
         this.maxLimit = maxLimit;
         this.availableLimit = availableLimit;
     }
 
 
-    public Long getMaxLimit() {
+    public Double getMaxLimit() {
         return maxLimit;
     }
 
-    public void setMaxLimit(Long maxLimit) {
+    public void setMaxLimit(Double maxLimit) {
         this.maxLimit = maxLimit;
     }
 
-    public Long getAvailableLimit() {
+    public Double getAvailableLimit() {
         return availableLimit;
     }
 
-    public void setAvailableLimit(Long availableLimit) {
+    public void setAvailableLimit(Double availableLimit) {
         this.availableLimit = availableLimit;
     }
 

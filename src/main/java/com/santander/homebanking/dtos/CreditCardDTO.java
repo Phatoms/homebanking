@@ -4,8 +4,8 @@ import com.santander.homebanking.models.Card;
 import com.santander.homebanking.models.CreditCard;
 
 public class CreditCardDTO extends CardDTO{
-    private Long maxLimit;
-    private Long availableLimit;
+    private Double maxLimit;
+    private Double availableLimit;
 
     public CreditCardDTO(CreditCard creditCard) {
         super(creditCard);
@@ -13,11 +13,11 @@ public class CreditCardDTO extends CardDTO{
         this.availableLimit = creditCard.getAvailableLimit();
     }
 
-    public Long getMaxLimit() {
+    public Double getMaxLimit() {
         return maxLimit;
     }
 
-    public Long getAvailableLimit() {
+    public Double getAvailableLimit() {
         return availableLimit;
     }
 }

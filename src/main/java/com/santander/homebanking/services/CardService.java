@@ -6,6 +6,7 @@ import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.utils.CardUtils;
+import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -61,9 +62,9 @@ public class CardService {
     public CardDTO newBasicCard(String cardColor, CardType cardType,
                                 HttpSession session) {
 
-        Boolean result = validateCard(cardColor, cardType, session);
+        ResponseUtils res = validateCard(cardColor, cardType, session);
 
-        if (!result){
+        if (!res.getDone()){
             return null;
         }
 
@@ -77,28 +78,26 @@ public class CardService {
         CardDTO card = new CardDTO(-1L, cardHolder, cardNumber.toString(), cvv, initialDate, thruDate, CardColor.valueOf(cardColor),
                 cardType, "pin");
 
-//        cardRepository.save(card);
-
         return card;
     }
 
-    public Boolean validateCard(String cardColor, CardType cardType,
+    public ResponseUtils validateCard(String cardColor, CardType cardType,
                              HttpSession session){
-        Boolean result = false;
+        ResponseUtils res = new ResponseUtils(true, 201, "card.validation.success");
         client = (Client) session.getAttribute("client");
 
         if(client == null){
-            return result;
+            return new ResponseUtils(false, 400, "card.validation.failure");
         }
 
         Long numTarjetasMismoTipo = client.getCards().stream().
                 filter(card -> card.getType() == cardType).count();
+
         if (numTarjetasMismoTipo >= 3){
-            return result;
+            return new ResponseUtils(false, 400, "account.validation.failure.max-cards");
         }
 
-        result = true;
-        return result;
+        return res;
     }
 
 

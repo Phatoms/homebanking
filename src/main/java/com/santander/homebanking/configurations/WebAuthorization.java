@@ -20,7 +20,7 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .antMatchers("/web/js/index.js", "/web/index.html",
+                .antMatchers("/web/js/index.js", "/web/index.html", "/web/payments.html",
                         "/web/css/**", "/web/img/**").permitAll()  // Permito a cualquier usuario ingresar al login.
                 .antMatchers("/rest/**" , "/h2-console").hasAuthority("ADMIN") // rest y console solo para admin
                 .antMatchers(HttpMethod.POST, "/api/clients").permitAll() //permito a todos registrar un nuevo cliente

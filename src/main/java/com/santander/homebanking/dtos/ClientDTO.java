@@ -78,4 +78,8 @@ public class ClientDTO {
     public Set<CreditCardDTO> getCreditCards() {
         return creditCards;
     }
+
+    public Set<DebitCardDTO> getDebitCards() {
+        return debitCards;
+    }
 }

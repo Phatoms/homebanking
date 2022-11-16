@@ -97,4 +97,10 @@ public class ClientService {
         return clientRepository.findByEmail(((Client)session.getAttribute("client")).getEmail()).map(ClientDTO::new).orElse(null);
     }
 
+    public void updateClientSession(HttpSession session) {
+        Client oldClient = (Client) session.getAttribute("client");
+        Client client = clientRepository.findByEmail(oldClient.getEmail()).orElse(null);
+        session.setAttribute("client", client);
+    }
+
 }
