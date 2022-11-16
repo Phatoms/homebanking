@@ -72,7 +72,7 @@ public class CardController {
 
     @PostMapping(value = "/clients/current/creditCards")
     public ResponseEntity<Object> addCreditCards(@RequestParam @NotBlank String cardColor,
-                                                 @RequestParam Long maxLimit,
+                                                 @RequestParam Double maxLimit,
                                                  HttpSession session) {
         ResponseUtils res = creditCardService.addCard(cardColor, maxLimit, session);
 
@@ -106,7 +106,7 @@ public class CardController {
     
     
     ///Metodo para la recepcion de pagos usando tarjetas de credito
-    @PostMapping(value = "/clients/current/creditCards/pay")
+    @PostMapping(value = "/clients/current/creditCards/pagar")
     public ResponseEntity<Object> newCreditCardTransaction(@RequestParam String cardNumberCredit,
                                                            @RequestParam String cardHolder,
                                                            @RequestParam String description,
@@ -130,14 +130,16 @@ public class CardController {
         }
     }
 
-    //Confrimamos el pago de la tarjeta de credito
 
-    public ResponseEntity<Object> validateCreditCardTransaction(@RequestParam Long id, @RequestParam String token){
-        ResponseUtils res = creditCardService.validateCreditCardTransaction(id, token);
+    //Confrimamos el pago de la tarjeta de credito
+    @PostMapping(value = "/clients/current/creditCards/confirm")
+    public ResponseEntity<Object> validateCreditCardTransaction(@RequestParam Long id, @RequestParam String token,
+                                                                HttpSession session){
+        ResponseUtils res = creditCardService.validateCreditCardTransaction(id, token, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
-                    res.getArgs()[0],
+                    messages.getMessage(res.getMessage(), null, LocaleContextHolder.getLocale()),
                     HttpStatus.valueOf(res.getStatusCode()));
         } else{
             return new ResponseEntity<>(
@@ -149,15 +151,15 @@ public class CardController {
 
     // Pagar con debito, pasar cvv, pin   pre transaccion return id de la transaccion
     @PostMapping(value = "/clients/current/debitCards/pagar")
-    public ResponseEntity<Object> preTransactionDebit(@RequestParam  String numberCardDebit,
-                                                      @RequestParam  String carhHolder,
-                                                      @RequestParam  String description,
-                                                      @RequestParam  Double amount,
-                                                      @RequestParam  Integer cvv,
-                                                      @RequestParam String thruDate,
-                                                      HttpSession session){
+    public ResponseEntity<Object> newDebitCardTransaction(@RequestParam  String numberCardDebit,
+                                                          @RequestParam  String cardHolder,
+                                                          @RequestParam  String description,
+                                                          @RequestParam  Double amount,
+                                                          @RequestParam  Integer cvv,
+                                                          @RequestParam  String thruDate,
+                                                          HttpSession session){
 
-        ResponseUtils res = debitCardService.createPreTransaction(numberCardDebit,carhHolder, description, amount, cvv, thruDate, session);
+        ResponseUtils res = debitCardService.createPreTransaction(numberCardDebit,cardHolder, description, amount, cvv, thruDate, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -171,9 +173,9 @@ public class CardController {
 
     }
     @PostMapping(value = "/clients/current/debitCards/confirm")
-    public ResponseEntity<Object> confirmTransaction(@RequestParam Long id,
-                                                     @RequestParam String token,
-                                                     HttpSession session){
+    public ResponseEntity<Object> validateDebitCardTransaction(@RequestParam Long id,
+                                                               @RequestParam String token,
+                                                               HttpSession   session){
 
         ResponseUtils res = debitCardService.confirmTransaction(id, token, session);
 
