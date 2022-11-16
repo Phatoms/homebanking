@@ -31,6 +31,9 @@ public class CreditCardService {
     private CardService cardService;
 
     @Autowired
+    private ClientService clientService;
+
+    @Autowired
     private CreditCardRepository creditCardRepository;
 
     @Autowired
@@ -48,7 +51,9 @@ public class CreditCardService {
     private CardDTO card;
 
     private Client client;
-    public ResponseUtils addCard(String cardColor, Long maxLimit,
+
+    private CreditCard clientCreditCard;
+    public ResponseUtils addCard(String cardColor, Double maxLimit,
                                  HttpSession session) {
 
         ResponseUtils res = validateCreditCard(cardColor, maxLimit, session);
@@ -69,7 +74,7 @@ public class CreditCardService {
         return res;
     }
 
-    private ResponseUtils validateCreditCard(String cardColor, Long maxLimit,
+    private ResponseUtils validateCreditCard(String cardColor, Double maxLimit,
                                             HttpSession session){
         ResponseUtils res = new ResponseUtils(true, 200, "card.validation.success");
         card = cardService.newBasicCard(cardColor, CardType.CREDIT, session);
@@ -101,24 +106,19 @@ public class CreditCardService {
                                                   Integer cvv,
                                                   String thruDate,
                                                   HttpSession session){
-        //ResponseUtils res = new ResponseUtils(false, 403, "card.pretransaction.validate.success");
 
-        //LocalDate localDate = LocalDate.parse(date.toString()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         ResponseUtils res = validateCreditCardData(cardHolder, cardNumber, amount, cvv, thruDate, session);
-
-
-        LocalDateTime cctLocalTime = LocalDateTime.now();
-        String cctToken = CardUtils.generateToken();
-        Float interestRate = 0f;
-
-        List<CreditCard> clientCreditCardsList = client.getCreditCards().stream().filter(card -> card.getNumber().equals(cardNumber)).collect(Collectors.toList());
-        CreditCard clientCreditCard = clientCreditCardsList.get(0);
 
         if(!res.getDone()){
             return res;
         }
 
-        CreditCardTransaction newCreditCardTransaction = new CreditCardTransaction(amount, description, cctLocalTime, cctToken, Status.PENDING, payments, interestRate,clientCreditCard);
+        String token = CardUtils.generateToken();
+
+        Float interestRate = 0f;
+
+        CreditCardTransaction newCreditCardTransaction = new CreditCardTransaction(amount, description,
+                LocalDateTime.now(), token, Status.PENDING, payments, interestRate,clientCreditCard);
 
         creditCardTransactionRepository.save(newCreditCardTransaction);
 
@@ -129,7 +129,7 @@ public class CreditCardService {
                     messages.getMessage("email.subject", null, LocaleContextHolder.getLocale()),
                     client.getFirstName(),
                     CardType.CREDIT.toString(),
-                    cctToken);
+                    token);
         } catch (MessagingException e){
             return new ResponseUtils(false, 500, "transaction.validation.failure.emailNotSent");
         }
@@ -137,8 +137,8 @@ public class CreditCardService {
         return res;
     }
 
-    public ResponseUtils validateCreditCardTransaction(Long id, String token){
-        ResponseUtils res = new ResponseUtils(false, 500, "transaction.validation.failure.emailNotSent");
+    public ResponseUtils validateCreditCardTransaction(Long id, String token, HttpSession session){
+        ResponseUtils res = new ResponseUtils(true, 200, "transaction.validation.success");
 
         CreditCardTransaction transaction = creditCardTransactionRepository.findById(id).orElse(null);
 
@@ -146,24 +146,37 @@ public class CreditCardService {
             return new ResponseUtils(false, 403, "transaction.validation.failure.noExist");
         }
 
+        if (transaction.getStatus().equals(Status.PASSED) || transaction.getStatus().equals(Status.REJECTED)){
+            return new ResponseUtils(false, 403, "transaction.validation.failure.transaction-invalid");
+        }
+
         if(!transaction.getToken().equals(token)){
             return new ResponseUtils(false, 403, "transaction.validation.failure.invalidToken");
         }
 
+        transaction.setStatus(Status.PASSED);
+
+        clientCreditCard.setAvailableLimit(clientCreditCard.getAvailableLimit() - transaction.getAmount());
+
+        creditCardRepository.save(clientCreditCard);
+
+        creditCardTransactionRepository.save(transaction);
+
+        clientService.updateClientSession(session);
+
         return res;
     }
 
-    private ResponseUtils validateCreditCardData(String cardHolder,
-                                                String cardNumber,
+
+
+    private ResponseUtils validateCreditCardData(String cardNumber,
+                                                String cardHolder,
                                                 Double amount,
                                                 Integer cvv,
                                                 String thruDate,
                                                 HttpSession session){
 
         ResponseUtils res = new ResponseUtils(true, 200, "card.pretransaction.validate.success");
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MM/yyyy");
-        LocalDate formattedThruDate = (LocalDate) dateTimeFormatter.parse(thruDate);
 
         client = (Client) session.getAttribute("client");
 
@@ -179,8 +192,21 @@ public class CreditCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.noCreditCards");
         }
 
-        CreditCard clientCreditCard = clientCreditCardsList.get(0);
-        LocalDate thruDateCard = LocalDate.parse(clientCreditCard.getThruDate().format(dateTimeFormatter));
+        clientCreditCard = clientCreditCardsList.get(0);
+
+        String thruDateCard = clientCreditCard.getThruDate().toString().substring(0,7);
+
+        if(amount > clientCreditCard.getAvailableLimit()){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.limit-exceeded");
+        }
+
+        if(!(thruDateCard.equals(thruDate))){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongThruDate");
+        }
+
+        if(clientCreditCard.getThruDate().isBefore(LocalDate.now())){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.cardExpired");
+        }
 
         if(!cardHolder.equals(clientCreditCard.getCardHolder())){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongOwner");
@@ -190,13 +216,6 @@ public class CreditCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongCvv");
         }
 
-        if(!(thruDateCard.isEqual(formattedThruDate))){
-            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongThruDate");
-        }
-
-        if(clientCreditCard.getThruDate().isBefore(LocalDate.now())){
-            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.cardExpired");
-        }
 
         return res;
     }
