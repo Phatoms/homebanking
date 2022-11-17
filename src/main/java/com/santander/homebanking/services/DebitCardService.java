@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -265,6 +266,28 @@ public class DebitCardService {
         return new ResponseUtils(true, 200, "transaction.validation.success");
     }
 
+    @Scheduled(cron = "1 * * * * *")
+    public void chanceToReject(){
+        // me traigo todas
+        List<DebitCardTransaction> setTransactions = debitCardTransactionRepository.findAll();
 
+        // las recorro y veo si tienen pendiente, y paso mas de 30 min... lo cambio a reject
+        for (DebitCardTransaction transaction : setTransactions) {
+            if(transaction.getStatus() == Status.PENDING){
+
+                if (LocalDateTime.now().getHour() - transaction.getTime().getHour() == 0) {
+                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 2) {
+                        transaction.setStatus(Status.REJECTED);
+                        debitCardTransactionRepository.save(transaction);
+                    }
+                } else{
+                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() < 2) {
+                        transaction.setStatus(Status.REJECTED);
+                        debitCardTransactionRepository.save(transaction);
+                    }
+                }
+            }
+        }
+    }
 
 }

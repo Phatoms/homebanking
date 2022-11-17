@@ -201,6 +201,7 @@ public class CreditCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.limit-exceeded");
         }
 
+
         if(!(thruDateCard.equals(thruDate))){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongThruDate");
         }
@@ -226,21 +227,23 @@ public class CreditCardService {
         // me traigo todas
         List<CreditCardTransaction> setTransactions = creditCardTransactionRepository.findAll();
 
-        // las recorro y veo si tienen pendiente, y paso mas de x min... lo cambio a reject
+        // las recorro y veo si tienen pendiente, y paso mas de 30 min... lo cambio a reject
         for (CreditCardTransaction transaction : setTransactions) {
             if(transaction.getStatus() == Status.PENDING){
 
-                if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 2) {
-//                if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 30) {
-                    if (LocalDateTime.now().getHour() - transaction.getTime().getHour() > 0) {
-                        // Como se me ocurrio sabes el tiempo de dif... no verifique en cambio de dias...
-                        transaction.setStatus(Status.REJECT);
+                if (LocalDateTime.now().getHour() - transaction.getTime().getHour() == 0) {
+                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 2) {
+                        transaction.setStatus(Status.REJECTED);
+                        creditCardTransactionRepository.save(transaction);
+                    }
+                } else{
+                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() < 2) {
+                        transaction.setStatus(Status.REJECTED);
+                        creditCardTransactionRepository.save(transaction);
                     }
                 }
             }
-            creditCardTransactionRepository.save(transaction);
         }
-
     }
 
 }
