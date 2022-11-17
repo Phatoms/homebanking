@@ -114,12 +114,13 @@ public class CardController {
                                                            @RequestParam String description,
                                                            @RequestParam Double amount,
                                                            @RequestParam Integer cvv,
+                                                           @RequestParam Integer payments,
                                                            @RequestParam String thruDate,
                                                            HttpSession session){
 
 
         ResponseUtils res = creditCardService.createPendingCreditCardTransaction(cardNumberCredit, cardHolder, amount, description,
-                6, cvv, thruDate, session);
+                payments, cvv, thruDate, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -192,7 +193,7 @@ public class CardController {
         }
     }
 
-    @GetMapping(value = "/clients/current/creditCards/fees")
+    @PostMapping(value = "/clients/current/creditCards/fees")
     public HashMap<String, Double> getFees(@RequestBody FeesDTO feesDTO){
 
         HashMap<String, Double> fees = creditCardService.getFees(feesDTO);
