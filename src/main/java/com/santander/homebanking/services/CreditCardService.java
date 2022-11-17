@@ -13,18 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,6 +47,26 @@ public class CreditCardService {
 
     private CreditCard clientCreditCard;
     private InterestRate interestRate;
+
+    public Optional<CreditCard> getSessionCreditCardById(Long cardId, HttpSession httpSession){
+        Client currentClient = (Client) httpSession.getAttribute("client");
+        if(currentClient == null){
+            return Optional.empty();
+        }
+        List<CreditCard> currentCards = currentClient.getCreditCards().stream().filter(creditCard -> creditCard.getId().equals(cardId)).collect(Collectors.toList());
+
+        if(currentCards.size()!=1){
+            return Optional.empty();
+        }
+
+        CreditCard currentCreditCard = creditCardRepository.findById(cardId).orElse(null);
+        if(currentCreditCard==null){
+            return Optional.empty();
+        }
+
+        return Optional.of(currentCreditCard);
+    }
+
     public ResponseUtils addCard(String cardColor, Double maxLimit,
                                  HttpSession session) {
 
