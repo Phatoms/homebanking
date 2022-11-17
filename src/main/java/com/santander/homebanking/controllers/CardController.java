@@ -1,12 +1,6 @@
 package com.santander.homebanking.controllers;
 
-import com.santander.homebanking.dtos.CardDTO;
-import com.santander.homebanking.dtos.CardSimpleDTO;
-import com.santander.homebanking.dtos.FeesDTO;
-import com.santander.homebanking.models.*;
-import com.santander.homebanking.repositories.AccountRepository;
-import com.santander.homebanking.repositories.CardRepository;
-import com.santander.homebanking.repositories.ClientRepository;
+import com.santander.homebanking.dtos.*;
 import com.santander.homebanking.repositories.DebitCardTransactionRepository;
 import com.santander.homebanking.services.CardService;
 import com.santander.homebanking.services.CreditCardService;
@@ -17,20 +11,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -200,5 +187,11 @@ public class CardController {
 
         return fees;
 
+    }
+
+    @GetMapping(value = "/clients/current/creditCards/{id}")
+    public CreditCardWTransactionsDTO getCreditCardTransactions(@PathVariable long id, HttpSession session){
+
+        return creditCardService.getSessionCreditCardById(id, session).map(CreditCardWTransactionsDTO::new).orElse(null);
     }
 }
