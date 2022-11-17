@@ -1,3 +1,11 @@
+body{
+    background-color: #ffa02c6d;
+    /* background-image: url(https://iili.io/H984En2.md.jpg);
+    background-image: url(https://iili.io/H988kRR.md.jpg); */
+    background-image: url(https://iili.io/H980rYu.jpg);
+    background-size: cover;
+    margin-bottom: 3rem;
+}
 .account{
     background: linear-gradient(45deg,#ee0979,#ff6a00);
     color: white;
@@ -9,7 +17,7 @@
 }
 
 .account-details-header{
-    background: linear-gradient(45deg,#ee0979,#ff6a00);
+    background: linear-gradient(45deg,#ee0978,#ff6a00);
     color: white;
 }
 
@@ -36,12 +44,16 @@
 }
 
 .menu-logo{
-    width: 30px;
-    height: 30px;
+    width: 2.7rem;
+
 }
 
 .welcome{
-    background: linear-gradient(to bottom, #C19A6B 0%, #B28B5C 100%);
+    /* background-image: url(https://iili.io/H988kRR.md.jpg); */
+    /* background: linear-gradient(to bottom, #c19a6b56 0%, #cac1b662 100%), url(https://iili.io/H988kRR.md.jpg);; */
+    background-image: url(https://iili.io/H984En2.md.jpg);
+    background-size: cover;
+    color: white;
 }
 
 .welcome-logo{
@@ -49,11 +61,14 @@
 }
 
 .index-body{
-    background-image: url(../img/avila.jpg);
+    background-image: url(https://iili.io/H980rYu.jpg);
     background-size: cover;
     background-attachment: fixed;
 }
 
 .index-container{
     margin-top: 10%;
+}
+.bg-color{
+    background-color: #eee;
 }

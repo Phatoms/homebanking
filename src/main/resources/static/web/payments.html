@@ -21,15 +21,15 @@
             </div>
         </div>
     </div>
-    <div class="container bg-light">
+    <div class="container bg-light pb-5">
         <div class="row mt-5">
             <div class="col-12 col-md-2">
-                <div class="bg-light">
+                <div class="bg-light mt-3">
                     <a href="/web/accounts.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                         <img class="menu-logo" src="img/logo bankito.png">
                         <span class="fs-2">BANK-ito</span>
                     </a>
-                    <hr>
+                    <hr class="m-3 mt-0">
                     <ul class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
                             <a href="/web/accounts.html" class="nav-link link-dark">
@@ -64,7 +64,7 @@
                     </ul>
                     <hr>
                     <ul class="nav nav-pills flex-column mb-auto">
-                        <button class="btn btn-danger img-fluid" v-on:click="signOut">Sign out</button>
+                        <button class="btn btn-danger mb-md-4 img-fluid" v-on:click="signOut">Sign out</button>
                     </ul>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                                 <input type="radio" class="form-check-input" id="radio2" name="optCardType" value="debit" v-model="optCardType">DEBIT
                                 <label class="form-check-label" for="radio2"></label>
                             </div>
-                            <form class="mt-4" >
+                            <form class="my-4" >
                                 <i class="bi bi-check"></i>
                                 <template v-if="optCardType === 'credit'">
                                     <div class="row mb-3">
@@ -161,25 +161,23 @@
                         <template v-if="createdToken === false">
                             <h2 class="display-6 subtitle">Pay Info</h2>
 
-                            <div class="row mb-3">
+                            <div class="row mb-3 me-3">
                                 <label for="amount" class="form-label">Amount</label>
                                 <input type="number" id="amount" v-model="amount" class="form-control" placeholder="50000">
                             </div>
 
 
                             <template v-if="optCardType === 'credit'">
+                                <div class="col my-3">
+                                    <button type="button" v-on:click="getFeeData($event)" class="btn btn-sm btn-outline-success m">Calculate fee</button>
+                                </div>
+
                                 <label for="payments" class="form-label">Payments</label>
                                 <select id="payments" v-model="loanTypeId" v-on:change="changedPayment($event)" class="form-select" aria-label="Default select example" required>
                                     <option v-for="(paymentFee, id) in paymentsFeesObject" v-bind:value="id">
-
                                         {{ paymentFee }}
-
                                     </option>
                                 </select>
-
-                                <div class="col">
-                                    <button type="button" v-on:click="getFeeData($event)" class="btn btn-sm btn-outline-success">Calculate fee</button>
-                                </div>
 
                             </template>
 
@@ -200,6 +198,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="confirModal" tabindex="-1" aria-labelledby="confirModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -218,6 +217,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal 2-->
 <div class="modal fade" id="okModal" tabindex="-1" aria-labelledby="okModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -235,28 +235,13 @@
         </div>
     </div>
 </div>
-<!-- Modal 3-->
-<div class="modal fade" id="feesModal" tabindex="-1" aria-labelledby="feesModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="feesModalLabel">Loan fees</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                You will pay:
-                <ol class="list-group list-group-numbered">
-                    <li v-for="fee in fees" class="list-group-item">${{ fee.amount }}</li>
-                    <span class="mt-2">Total: ${{ this.totalLoan }}</span>
-                </ol>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal">Ok</button>
-            </div>
-        </div>
-    </div>
+
+
+
 </div>
-</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
