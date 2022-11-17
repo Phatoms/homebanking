@@ -1,10 +1,12 @@
 package com.santander.homebanking.services;
 
 import com.santander.homebanking.dtos.CardDTO;
+import com.santander.homebanking.dtos.FeesDTO;
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.repositories.CreditCardRepository;
 import com.santander.homebanking.repositories.CreditCardTransactionRepository;
+import com.santander.homebanking.repositories.InterestRateRepository;
 import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,17 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,30 +33,25 @@ public class CreditCardService {
 
     @Autowired
     private CardService cardService;
-
     @Autowired
     private ClientService clientService;
-
     @Autowired
     private CreditCardRepository creditCardRepository;
-
     @Autowired
     private ClientRepository clientRepository;
-
     @Autowired
     private CreditCardTransactionRepository creditCardTransactionRepository;
-
+    @Autowired
+    private InterestRateRepository interestRateRepository;
     @Autowired
     private EmailSenderService senderService;
-
     @Autowired
     MessageSource messages;
-
     private CardDTO card;
-
     private Client client;
 
     private CreditCard clientCreditCard;
+    private InterestRate interestRate;
     public ResponseUtils addCard(String cardColor, Double maxLimit,
                                  HttpSession session) {
 
@@ -103,12 +101,12 @@ public class CreditCardService {
                                                   String cardNumber,
                                                   Double amount,
                                                   String description,
-                                                  int payments,
+                                                  Integer payments,
                                                   Integer cvv,
                                                   String thruDate,
                                                   HttpSession session){
 
-        ResponseUtils res = validateCreditCardData(cardHolder, cardNumber, amount, cvv, thruDate, session);
+        ResponseUtils res = validateCreditCardData(cardHolder, cardNumber, amount, cvv, thruDate, payments, session);
 
         if(!res.getDone()){
             return res;
@@ -116,10 +114,8 @@ public class CreditCardService {
 
         String token = CardUtils.generateToken();
 
-        Float interestRate = 0f;
-
         CreditCardTransaction newCreditCardTransaction = new CreditCardTransaction(amount, description,
-                LocalDateTime.now(), token, Status.PENDING, payments, interestRate,clientCreditCard);
+                LocalDateTime.now(), token, Status.PENDING, payments, interestRate.getInterestRate(),clientCreditCard);
 
         creditCardTransactionRepository.save(newCreditCardTransaction);
 
@@ -175,6 +171,7 @@ public class CreditCardService {
                                                 Double amount,
                                                 Integer cvv,
                                                 String thruDate,
+                                                Integer payments,
                                                 HttpSession session){
 
         ResponseUtils res = new ResponseUtils(true, 200, "card.pretransaction.validate.success");
@@ -218,9 +215,15 @@ public class CreditCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongCvv");
         }
 
+        interestRate = interestRateRepository.findByFeeNumber(payments).orElse(null);
+        if (interestRate == null){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrong-interest-rate");
+        }
+
 
         return res;
     }
+
 
     @Scheduled(cron = "1 * * * * *")
     public void chanceToReject(){
@@ -245,5 +248,30 @@ public class CreditCardService {
             }
         }
     }
+
+
+    public HashMap<String, Double> getFees(FeesDTO feesDTO){
+
+        HashMap<String, Double> fees = new HashMap<>();
+
+        fees.put(String.valueOf(feesDTO.getPayments()[0]), 2000.0);
+
+        for(Integer payments : feesDTO.getPayments()){
+            InterestRate interestRate = interestRateRepository.findByFeeNumber(payments).orElse(null);
+            if (interestRate == null){
+                return new HashMap<>();
+            }
+
+            Double amount = feesDTO.getAmount();
+
+            Double fee = CardUtils.getFee(payments, interestRate, amount);
+            fees.put(String.valueOf(payments), fee);
+        }
+
+        return fees;
+
+    }
+
+
 
 }

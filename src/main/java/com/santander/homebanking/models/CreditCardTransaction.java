@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 public class CreditCardTransaction extends CardTransaction{
     private Integer payments;
 
-    private Float interestRate;
+    private Double interestRate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "credit_card_id")
     private CreditCard creditCard;
 
-    public CreditCardTransaction(Double amount, String description, LocalDateTime time, String token, Status status, Integer payments, Float interestRate, CreditCard creditCard) {
+    public CreditCardTransaction(Double amount, String description, LocalDateTime time, String token, Status status, Integer payments, Double interestRate, CreditCard creditCard) {
         super(amount, description, time, token, status);
         this.payments = payments;
         this.interestRate = interestRate;
@@ -27,7 +27,7 @@ public class CreditCardTransaction extends CardTransaction{
         return payments;
     }
 
-    public Float getInterestRate() {
+    public Double getInterestRate() {
         return interestRate;
     }
 

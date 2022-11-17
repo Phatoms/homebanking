@@ -1,5 +1,9 @@
 package com.santander.homebanking.utils;
 
+import com.santander.homebanking.models.InterestRate;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Random;
 
 public final class CardUtils {
@@ -22,5 +26,11 @@ public final class CardUtils {
     public static String generateToken(){
         String token = String.valueOf((int)((Math.random() * (999999 - 100000)) + 100000));
         return token;
+    }
+
+    public static Double getFee(Integer payments, InterestRate interestRate, Double amount) {
+        Double totalAmount = amount * Math.pow(1 + interestRate.getInterestRate(), interestRate.getFeeNumber());
+        Double fee = new BigDecimal(totalAmount/ payments).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return fee;
     }
 }
