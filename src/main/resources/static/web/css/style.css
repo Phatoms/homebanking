@@ -41,11 +41,11 @@
 }
 
 .welcome{
-    background: linear-gradient(45deg,#ee0979,#ff6a00);
+    background: linear-gradient(to bottom, #C19A6B 0%, #B28B5C 100%);
 }
 
 .welcome-logo{
-    width: 60%;
+    width: 30%;
 }
 
 .index-body{
