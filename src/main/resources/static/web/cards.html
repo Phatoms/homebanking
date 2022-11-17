@@ -124,8 +124,22 @@
                         <span class="small" v-if="creditCards.length <= 0">No credit cards</span>
                     </div>
                 </div>
+<!--                <div v-for="account in clientInfo.accounts" class="col-12 col-md-3 mt-2">
+                    <a class="account-link" v-bind:href="'http://localhost:8080/web/account.html?id='+account.id">
+                        <div class="card border-0 account">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ account.number }}</h5>
+                                <p class="card-text"> {{ formatDate(account.creationDate) }}</p>
+                                <p class="text-center lead account-balance"> ${{ account.balance }} </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>-->
+
+
                 <div class="row">
                     <div v-for="card in creditCards" class="plastic-card col-12 col-md-3 mt-2">
+                    <a v-bind:href="'http://localhost:8080/web/credit-card-transaction.html?id='+card.id">
                         <div v-bind:class="['plastic-card__front', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
                             <div class="plastic-card__square">
                                 <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
@@ -156,6 +170,7 @@
                                      src="img/logo bankito.png">
                             </div>
                         </div>
+                    </a>
                     </div>
                 </div>
             </div>

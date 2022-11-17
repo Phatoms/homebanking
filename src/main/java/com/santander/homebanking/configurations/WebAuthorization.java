@@ -26,7 +26,7 @@ public class WebAuthorization extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/clients").permitAll() //permito a todos registrar un nuevo cliente
                 .antMatchers(HttpMethod.POST, "/api/transactions").hasAnyAuthority("CLIENT", "ADMIN") //permito a clientes y admin hacer transacciones
                 .antMatchers(HttpMethod.POST, "/api/loans").hasAnyAuthority("CLIENT", "ADMIN") //permito a clientes y admin hacer transacciones
-                .antMatchers(HttpMethod.POST, "/api/clients/**").hasAnyAuthority("CLIENT", "ADMIN") //Los post para tarjetas, etc para clientes y admin
+                .antMatchers(HttpMethod.POST, "/api/clients/**", "/clients/current/creditCards/**").hasAnyAuthority("CLIENT", "ADMIN") //Los post para tarjetas, etc para clientes y admin
                 .antMatchers(HttpMethod.GET, "/api/clients/current/loans").hasAnyAuthority("CLIENT", "ADMIN") // Cualquier current solo client y admin
                 .antMatchers(HttpMethod.GET, "/api/loans").hasAnyAuthority("CLIENT", "ADMIN") // Cualquier current solo client y admin
                 .antMatchers(HttpMethod.GET, "/api/**/current/**").hasAnyAuthority("CLIENT", "ADMIN") // Cualquier current solo client y admin

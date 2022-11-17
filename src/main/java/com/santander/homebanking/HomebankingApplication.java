@@ -45,6 +45,7 @@ public class HomebankingApplication {
 			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
+			Client client4 = new Client("antonio", "fumero", "aefumero@gmail.com", passwordEncoder.encode("123"));
 
 			Account account1 = new Account("VIN005", LocalDate.parse("2022-09-08"), 100000.0);
 			Account account2 = new Account("VIN006", LocalDate.parse("2022-09-10"), 40000.0);
@@ -108,7 +109,10 @@ public class HomebankingApplication {
 
 			/// Modulo de prueba con card1
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
+			CreditCard creditCard2 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
+
 			client1.addCreditCard(creditCard1);
+			client4.addCreditCard(creditCard2);
 
 			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
@@ -124,6 +128,7 @@ public class HomebankingApplication {
 			clientRepository.save(client1);
 			clientRepository.save(client2);
 			clientRepository.save(client3);
+			clientRepository.save(client4);
 
 
 			accountRepository.save(account1);
@@ -132,6 +137,7 @@ public class HomebankingApplication {
 			accountRepository.save(account4);
 
 			creditCardRepository.save(creditCard1);
+			creditCardRepository.save(creditCard2);
 
 			debitCardRepository.save(debitCard);
 
