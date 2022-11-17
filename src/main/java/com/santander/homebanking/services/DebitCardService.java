@@ -2,10 +2,7 @@ package com.santander.homebanking.services;
 
 import com.santander.homebanking.dtos.CardDTO;
 import com.santander.homebanking.models.*;
-import com.santander.homebanking.repositories.AccountRepository;
-import com.santander.homebanking.repositories.ClientRepository;
-import com.santander.homebanking.repositories.DebitCardRepository;
-import com.santander.homebanking.repositories.DebitCardTransactionRepository;
+import com.santander.homebanking.repositories.*;
 import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +45,9 @@ public class DebitCardService {
 
     @Autowired
     private DebitCardTransactionRepository debitCardTransactionRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @Autowired
     private EmailSenderService senderService;
@@ -141,9 +141,14 @@ public class DebitCardService {
 
         String token = CardUtils.generateToken();
 
+        Transaction accountTransaction = new Transaction(amount, description, LocalDateTime.now(), TransactionType.DEBIT);
+
         DebitCardTransaction transaction = new DebitCardTransaction(amount, description, LocalDateTime.now(), token, Status.PENDING, accountToDebit);
 
+        accountToDebit.addTransactions(accountTransaction);
+
         debitCardTransactionRepository.save(transaction);
+        transactionRepository.save(accountTransaction);
 
         res.setArgs(new String[]{String.valueOf(transaction.getId())});
 
@@ -182,7 +187,13 @@ public class DebitCardService {
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.noDebitCards");
         }
 
-        debitCardToDebit = debitCardsFromClient.stream().filter(debitCard -> debitCard.getNumber().equals(numberCardDebit)).collect(Collectors.toList()).get(0);
+        List<DebitCard> debitCardsClient = debitCardsFromClient.stream().filter(debitCard -> debitCard.getNumber().equals(numberCardDebit)).collect(Collectors.toList());
+
+        if (debitCardsClient.size() == 0){
+            return new ResponseUtils(false, 400, "pre-transaction.validation.failure.noDebitCards");
+        }
+
+        debitCardToDebit = debitCardsClient.get(0);
 
         if(!carhHolder.equals(debitCardToDebit.getCardHolder())){
             return new ResponseUtils(false, 400, "pre-transaction.validation.failure.wrongOwner");
@@ -257,7 +268,7 @@ public class DebitCardService {
             return new ResponseUtils(false, 403, "transaction.validation.failure.transaction-invalid");
         }
 
-        if(!(transaction.getToken().equals(token))){
+        if(!(transaction.getToken().equals(token.trim()))){
             return new ResponseUtils(false, 400, "transaction.validation.failure.transaction-wrong-token");
         }
 

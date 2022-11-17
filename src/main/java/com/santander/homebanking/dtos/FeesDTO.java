@@ -4,7 +4,6 @@ import javax.validation.constraints.Min;
 
 public class FeesDTO {
 
-    @Min(1)
     Double amount;
 
     Integer[] payments;
