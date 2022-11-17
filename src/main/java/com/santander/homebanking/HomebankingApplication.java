@@ -42,7 +42,7 @@ public class HomebankingApplication {
 	){
 		return (args) -> {
 
-			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("password1"));
+			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
 
@@ -110,7 +110,7 @@ public class HomebankingApplication {
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
 			client1.addCreditCard(creditCard1);
 
-			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2021-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
+			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
 
 			Double baseInterestRate = 0.0;

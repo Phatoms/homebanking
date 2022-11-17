@@ -1,29 +1,39 @@
 var app = new Vue({
     el:"#app",
     data:{
+        paymentsFeesObject : {},
+        paymentsFees: [],
+        selectedPayments : 0,
         createdToken: false,
         token: '',
-        optCardType: 'credit',
+        id: '',
+        payments : [1, 3, 6, 12],
+        optCardType: 'debit',
         cardNumberCredit: '',
-        numberCardDebit: '',
-        cardHolder: '',
-        description: '',
-        amount: '',
-        cvv: '',
-        thruDate: '',
+        numberCardDebit: '2222-3333-4444-5555',
+        cardHolder: 'Tomas Quinteros',
+        description: 'Pagando netflix2',
+        amount: '2000',
+        cvv: '123',
+        thruDate: '2027-09',
         loanTypes: [],
         errorToats: null,
         errorMsg: null,
     },
     methods:{
-        getData: function(){
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            axios.get(`/api/clients/current/accounts/${id}`)
+        getFeeData: function(){
+            axios.post("/api/clients/current/creditCards/fees", {"amount": this.amount, "payments": this.payments})//""
                 .then((response) => {
-                    //get client ifo
-                    this.accountInfo = response.data;
-                    this.accountInfo.transactions.sort((a,b) => parseInt(b.id - a.id))
+
+                    this.paymentsFees = response.data;
+                    var listString = "";
+                    this.paymentsFeesObject = {};
+                    var paymentsFeesString = []
+                    for(let fee in this.paymentsFees){
+                        listString = fee + " cuotas : $" + this.paymentsFees[fee];
+                        this.paymentsFeesObject[fee] = listString;
+                    }
+
                 })
                 .catch((error) => {
                     // handle error
@@ -57,29 +67,76 @@ var app = new Vue({
                     this.errorToats.show();
                 })
         },
-        changedType: function(){
-            this.paymentsList = this.loanTypes.find(loanType => loanType.id == this.loanTypeId).payments;
+        changedPayment: function(event){
+            this.selectedPayments = event.target.value;
+            //this.paymentsList = this.loanTypes.find(loanType => loanType.id == this.loanTypeId).payments;
         },
-        createDebitCardTransaction: function(event){
 
-//            this.createdToken = true;
-            console.log(this.createdToken);
+        createCreditCardTransaction: function(event){
             event.preventDefault();
-            axios.post('/api/clients/current/debitCards/pagar',
-            `numberCardDebit=${this.numberCardDebit}&cardHolder=${this.cardHolder}&description=${this.description}
-            &amount=${this.amount}&cvv=${this.cvv}&thruDate=${this.thruDate}`)
+            axios.post('/api/clients/current/creditCards/pay',
+            `cardNumberCredit=${this.cardNumberCredit}&cardHolder=${this.cardHolder}&description=${this.description}
+            &amount=${this.amount}&cvv=${this.cvv}&payments=${this.selectedPayments}&thruDate=${this.thruDate}`)
                 .then(response => {
                     this.createdToken = true;
-
+                    this.id = response.data;
                 })
                 .catch((error) =>{
                     this.errorMsg = error.response.data;
                     this.errorToats.show();
                 })
-           }
+           },
+
+
+      confirmCreditCardTransaction: function(event){
+          event.preventDefault();
+          axios.post('/api/clients/current/creditCards/confirm',
+          `id=${this.id}&token=${this.token}`)
+              .then(response => {
+                  console.log("TOKEN RECIBIDO");
+                  console.log(response);
+
+              })
+              .catch((error) =>{
+                  this.errorMsg = error.response.data;
+                  this.errorToats.show();
+              })
+         },
+
+        createDebitCardTransaction: function(event){
+            event.preventDefault();
+            axios.post('/api/clients/current/debitCards/pay',
+            `numberCardDebit=${this.numberCardDebit}&cardHolder=${this.cardHolder}&description=${this.description}
+            &amount=${this.amount}&cvv=${this.cvv}&thruDate=${this.thruDate}`)
+                .then(response => {
+                    this.createdToken = true;
+                    this.id = response.data;
+                })
+                .catch((error) =>{
+                    this.errorMsg = error.response.data;
+                    this.errorToats.show();
+                })
+           },
+
+           confirmDebitCardTransaction: function(event){
+               event.preventDefault();
+               axios.post('/api/clients/current/debitCards/confirm',
+               `id=${this.id}&token=${this.token}`)
+                   .then(response => {
+                       console.log("TOKEN RECIBIDO");
+                       console.log(response);
+
+                   })
+                   .catch((error) =>{
+                       this.errorMsg = error.response.data;
+                       this.errorToats.show();
+                   })
+              },
+
+
     },
     mounted: function(){
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
-        this.getData();
+        //getFeeData();
     }
 })
