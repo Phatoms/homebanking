@@ -9,7 +9,7 @@ var app = new Vue({
         id: '',
         payments : [1, 3, 6, 12],
         optCardType: 'debit',
-        cardNumberCredit: '',
+        cardNumberCredit: '1111-2222-3333-4444',
         numberCardDebit: '2222-3333-4444-5555',
         cardHolder: 'Tomas Quinteros',
         description: 'Pagando netflix2',

@@ -1,5 +1,8 @@
 package com.santander.homebanking.services;
 
+import com.santander.homebanking.models.CreditCardTransaction;
+import com.santander.homebanking.models.InterestRate;
+import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Set;
 
 @Service
 public class EmailSenderService {
@@ -15,7 +19,8 @@ public class EmailSenderService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(String toEmail,
+
+    public void sendEmailConfirmToken(String toEmail,
                           String subject,
                           String user,
                           String cardType,
@@ -502,16 +507,638 @@ public class EmailSenderService {
         helper.setText(htmlMsg, true); // Use this or above line.
         helper.setTo(toEmail);
         helper.setSubject(subject);
-//        helper.setFrom("testmailequipo03@gmail.com");
+
         mailSender.send(mimeMessage);
+        System.out.println("El mail fue enviado correctamente");
+    }
 
-/*        message.setFrom("homebanking5574684@gmail.com");
-        message.setTo(toEmail);
-        message.setText(body);
-        message.setSubject(subject);
 
-        mailSender.send(message);*/
+    public void sendEmailCreditCardStatement(String toEmail,
+                                             String subject,
+                                             String name,
+                                             Set<CreditCardTransaction> creditCardTransactions) throws MessagingException {
+        name = StringUtils.capitalize(name);
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
+
+        String htmlMsgPre = "<!doctype html>\n" +
+                "<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
+                "\n" +
+                "<head>\n" +
+                "  <title> Welcome to [Coded Mails] </title>\n" +
+                "  <!--[if !mso]><!-- -->\n" +
+                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "  <!--<![endif]-->\n" +
+                "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "  <style type=\"text/css\">\n" +
+                "    #outlook a {\n" +
+                "      padding: 0;\n" +
+                "    }\n" +
+                "\n" +
+                "    #title {\n" +
+                "      margin: 0rem !important;\n" +
+                "    }\n" +
+                "\n" +
+                "    body {\n" +
+                "      margin: 0;\n" +
+                "      padding: 2rem;\n" +
+                "      -webkit-text-size-adjust: 100%;\n" +
+                "      -ms-text-size-adjust: 100%;\n" +
+                "    }\n" +
+                "\n" +
+                "    table,\n" +
+                "    td {\n" +
+                "      border-collapse: collapse;\n" +
+                "      mso-table-lspace: 0pt;\n" +
+                "      mso-table-rspace: 0pt;\n" +
+                "    }\n" +
+                "\n" +
+                "    img {\n" +
+                "      border: 0;\n" +
+                "      height: auto;\n" +
+                "      line-height: 100%;\n" +
+                "      outline: none;\n" +
+                "      text-decoration: none;\n" +
+                "      -ms-interpolation-mode: bicubic;\n" +
+                "    }\n" +
+                "\n" +
+                "    p {\n" +
+                "      display: block;\n" +
+                "      margin: 13px 0;\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "  <!--[if mso]>\n" +
+                "        <xml>\n" +
+                "        <o:OfficeDocumentSettings>\n" +
+                "          <o:AllowPNG/>\n" +
+                "          <o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                "        </o:OfficeDocumentSettings>\n" +
+                "        </xml>\n" +
+                "        <![endif]-->\n" +
+                "  <!--[if lte mso 11]>\n" +
+                "        <style type=\"text/css\">\n" +
+                "          .mj-outlook-group-fix { width:100% !important; }\n" +
+                "        </style>\n" +
+                "        <![endif]-->\n" +
+                "  <!--[if !mso]><!-->\n" +
+                "  <link href=\"https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;500;600&display=swap\" rel=\"stylesheet\" type=\"text/css\">\n" +
+                "  <link href=\"https://fonts.googleapis.com/css2?family=Montserrat&display=swap\" rel=\"stylesheet\" type=\"text/css\">\n" +
+                "  <style type=\"text/css\">\n" +
+                "    @import url(https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;500;600&display=swap);\n" +
+                "    @import url(https://fonts.googleapis.com/css2?family=Montserrat&display=swap);\n" +
+                "  </style>\n" +
+                "  <!--<![endif]-->\n" +
+                "  <style type=\"text/css\">\n" +
+                "    @media only screen and (min-width:480px) {\n" +
+                "      .mj-column-per-100 {\n" +
+                "        width: 100% !important;\n" +
+                "        max-width: 100%;\n" +
+                "      }\n" +
+                "\n" +
+                "      .mj-column-per-50 {\n" +
+                "        width: 50% !important;\n" +
+                "        max-width: 50%;\n" +
+                "      }\n" +
+                "\n" +
+                "      .mj-column-per-13 {\n" +
+                "        width: 13% !important;\n" +
+                "        max-width: 13%;\n" +
+                "      }\n" +
+                "\n" +
+                "      .mj-column-per-54 {\n" +
+                "        width: 54% !important;\n" +
+                "        max-width: 54%;\n" +
+                "      }\n" +
+                "\n" +
+                "      .mj-column-per-20 {\n" +
+                "        width: 20% !important;\n" +
+                "        max-width: 20%;\n" +
+                "      }\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "  <style type=\"text/css\">\n" +
+                "    @media only screen and (max-width:480px) {\n" +
+                "      table.mj-full-width-mobile {\n" +
+                "        width: 100% !important;\n" +
+                "      }\n" +
+                "\n" +
+                "      td.mj-full-width-mobile {\n" +
+                "        width: auto !important;\n" +
+                "      }\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "  <style type=\"text/css\">\n" +
+                "    a,\n" +
+                "    span,\n" +
+                "    td,\n" +
+                "    th {\n" +
+                "      -webkit-font-smoothing: antialiased !important;\n" +
+                "      -moz-osx-font-smoothing: grayscale !important;\n" +
+                "    }\n" +
+                "  </style>\n" +
+                "</head>\n" +
+                "\n" +
+                "<body style=\"background-image: url('https://iili.io/H980rYu.jpg');\">\n" +
+                "  <h1 id=\"title\" style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:54px;font-weight:400;margin-top: 2rem ;text-align:center;color:#000000;\">BANK-ito</h1>\n" +
+                "  <div style=\"display:none;font-size:1px;color:#1a1919;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;\"> Credit card statement </div>\n" +
+                "  <div style=\"\">\n" +
+                "    <div style=\"margin:0px auto;max-width:900px;\">\n" +
+                "      <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "        <tbody>\n" +
+                "          <tr>\n" +
+                "            <td style=\"direction:ltr;font-size:0px;padding:20px 0;padding-bottom:0px;text-align:center;\">\n" +
+                "              <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;\">\n" +
+                "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:middle;\" width=\"100%\">\n" +
+                "                  <tr>\n" +
+                "                    <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse:collapse;border-spacing:0px;\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"width:150px;\">\n" +
+                "                              \n" +
+                "                              <img alt=\"Logo\" height=\"auto\" src=\"https://iili.io/H98cmMP.png\" style=\"border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:14px;\" width=\"150\">\n" +
+                "                              \n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </table>\n" +
+                "              </div>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </div>\n" +
+                "\n" +
+                "    <div style=\"margin:0px auto;max-width:900px;\">\n" +
+                "      <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "        <tbody>\n" +
+                "          <tr>\n" +
+                "            <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "              <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">\n" +
+                "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                  <tr>\n" +
+                "                    <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                      <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse:collapse;border-spacing:0px;\">\n" +
+                "                        <tbody>\n" +
+                "                          <tr>\n" +
+                "\n" +
+                "                          </tr>\n" +
+                "                        </tbody>\n" +
+                "                      </table>\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                  <tr>\n" +
+                "                    <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                      <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#000000;\">\n" +
+                "                        <h1 style=\"margin: 0; text-align: center; font-size: 36px; line-height: 45px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Credit card statement</h1>\n" +
+                "                      </div>\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "\n" +
+                "                  </tr>\n" +
+                "                </table>\n" +
+                "              </div>\n" +
+                "\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </div>\n" +
+                "    <div style=\"background:#111111;background-color:#111111;margin:0px auto;border-radius:5px;max-width:900px;\">\n" +
+                "      <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background:#111111;background-color:#111111;width:100%;border-radius:5px;\">\n" +
+                "        <tbody>\n" +
+                "          <tr>\n" +
+                "            <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "              <div style=\"margin:0px auto;max-width:900px;\">\n" +
+                "                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "                  <tbody>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"direction:ltr;font-size:0px;padding:0;text-align:center;\">\n" +
+                "\n" +
+                "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">\n" +
+                "                          <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                            <tr>\n" +
+                "                              <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:22px;text-align:left;color:#dddddd;\">\n" +
+                "                                  <h3 style=\"margin: 0; font-size: 22px; line-height: 20px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Credit card transactions</h3>\n" +
+                "                                </div>\n" +
+                "                              </td>\n" +
+                "                            </tr>\n" +
+                "                          </table>\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody>\n" +
+                "                </table>\n" +
+                "              </div>\n" +
+                "\n" +
+                "              <div style=\"margin:0px auto;max-width:900px;\">\n" +
+                "                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "                  <tbody>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"direction:ltr;font-size:0px;padding:0;text-align:center;\">\n" +
+                "\n" +
+                "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;\">\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-13 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">N°</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-54 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">Description</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-13 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">Fees</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-20 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:right;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">Amount</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                        </div>\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody>\n" +
+                "                </table>\n" +
+                "              </div>";
+        Integer numTransaction = 1;
+        Double totalAmount = 0.0;
+        for (CreditCardTransaction cct : creditCardTransactions){
+            InterestRate interestRate = new InterestRate(cct.getPayments(), cct.getInterestRate());
+            Double feeAmount = CardUtils.getFee(cct.getPayments(), interestRate, cct.getAmount());
+            totalAmount+= feeAmount;
+            String htmlCreditCardTransaction = "<div style=\"margin:0px auto;max-width:900px;\">\n" +
+                    "                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                    "                  <tbody>\n" +
+                    "                    <tr>\n" +
+                    "                      <td style=\"direction:ltr;font-size:0px;padding:0;text-align:center;\">\n" +
+                    "\n" +
+                    "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;\">\n" +
+                    "\n" +
+                    "                          <div class=\"mj-column-per-13 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                    "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                    "                              <tr>\n" +
+                    "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                    "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                    "                                    <p style=\"margin: 0;\">"+ numTransaction + "</p>\n" +
+                    "                                  </div>\n" +
+                    "                                </td>\n" +
+                    "                              </tr>\n" +
+                    "                            </table>\n" +
+                    "                          </div>\n" +
+                    "\n" +
+                    "\n" +
+                    "                          <div class=\"mj-column-per-54 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                    "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                    "                              <tr>\n" +
+                    "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                    "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                    "                                    <p style=\"margin: 0;\">" + cct.getDescription()+ "</p>\n" +
+                    "                                  </div>\n" +
+                    "                                </td>\n" +
+                    "                              </tr>\n" +
+                    "                            </table>\n" +
+                    "                          </div>\n" +
+                    "\n" +
+                    "                          <div class=\"mj-column-per-13 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                    "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                    "                              <tr>\n" +
+                    "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                    "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                    "                                    <p style=\"margin: 0;\">"+ cct.getPayments() +"</p>\n" +
+                    "                                  </div>\n" +
+                    "                                </td>\n" +
+                    "                              </tr>\n" +
+                    "                            </table>\n" +
+                    "                          </div>\n" +
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "                          <div class=\"mj-column-per-20 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                    "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                    "                              <tr>\n" +
+                    "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                    "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:right;color:#dddddd;\">\n" +
+                    "                                    <p style=\"margin: 0;\">$"+ feeAmount+ "</p>\n" +
+                    "                                  </div>\n" +
+                    "                                </td>\n" +
+                    "                              </tr>\n" +
+                    "                            </table>\n" +
+                    "                          </div>\n" +
+                    "\n" +
+                    "                        </div>\n" +
+                    "                      </td>\n" +
+                    "                    </tr>\n" +
+                    "                  </tbody>\n" +
+                    "                </table>\n" +
+                    "              </div>";
+
+            htmlMsgPre += htmlCreditCardTransaction;
+            numTransaction++;
+        }
+
+
+
+
+
+        String htmlTotal = "<div style=\"background:#000000;background-color:#000000;margin:0px auto;max-width:900px;\">\n" +
+                "                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background:#000000;background-color:#000000;width:100%;\">\n" +
+                "                  <tbody>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;\">\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:left;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">Total</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:24px;text-align:right;color:#dddddd;\">\n" +
+                "                                    <p style=\"margin: 0;\">$" + totalAmount +"</p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody>\n" +
+                "                </table>\n" +
+                "              </div>";
+
+        String htmlMsgPost = " <div style=\"margin:0px auto;max-width:600px;\">\n" +
+                "                <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "                  <tbody>\n" +
+                "                    <tr>\n" +
+                "                      <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;\">\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:22px;text-align:left;color:#dddddd;\">\n" +
+                "                                    <h3 style=\"margin: 0; font-size: 22px; line-height: 20px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Billing Info</h3>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:left;color:#999999;\">\n" +
+                "                                    <p style=\"margin: 0;\">John Doe<br> 123 New St <br> Alexender Platz, Berlin<br> 22330<br> Germany<br>\n" +
+                "                                    </p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
+                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:22px;text-align:right;color:#dddddd;\">\n" +
+                "                                    <h3 style=\"margin: 0; font-size: 22px; line-height: 20px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Shipping address</h3>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                              <tr>\n" +
+                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:right;color:#999999;\">\n" +
+                "                                    <p style=\"margin: 0;\">John Doe<br> 123 New St <br> Alexender Platz, Berlin<br> 22330<br> Germany<br>\n" +
+                "                                    </p>\n" +
+                "                                  </div>\n" +
+                "                                </td>\n" +
+                "                              </tr>\n" +
+                "                            </table>\n" +
+                "                          </div>\n" +
+                "\n" +
+                "                        </div>\n" +
+                "\n" +
+                "                      </td>\n" +
+                "                    </tr>\n" +
+                "                  </tbody>\n" +
+                "                </table>\n" +
+                "              </div>\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </div>\n" +
+                "\n" +
+                "    <div style=\"margin:0px auto;max-width:600px;\">\n" +
+                "      <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "        <tbody>\n" +
+                "          <tr>\n" +
+                "            <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "              <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">\n" +
+                "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                  <tr>\n" +
+                "                    <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                      <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#999999;\">\n" +
+                "                        <p style=\"margin: 0;\">Have questions or need help? Email us at <a href=\"mailto:\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">hello@codedmails.com</a></p>\n" +
+                "                      </div>\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </table>\n" +
+                "              </div>\n" +
+                "\n" +
+                "            </td>\n" +
+                "          </tr>\n" +
+                "        </tbody>\n" +
+                "      </table>\n" +
+                "    </div>\n" +
+                "\n" +
+                "    <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background:#000000;background-color:#000000;width:100%;\">\n" +
+                "      <tbody>\n" +
+                "        <tr>\n" +
+                "          <td>\n" +
+                "\n" +
+                "            <div style=\"margin:0px auto;max-width:600px;\">\n" +
+                "              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
+                "                <tbody>\n" +
+                "                  <tr>\n" +
+                "                    <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
+                "\n" +
+                "                      <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">\n" +
+                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
+                "                          <tr>\n" +
+                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\"><a class=\"footer-link\" href=\"#\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">Support</a> &nbsp; | &nbsp; <a class=\"footer-link\" href=\"#\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">Privacy Policy</a></div>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                          <tr>\n" +
+                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\">123 Medalling Jr., Suite 100, Parrot Park, CA 12345</div>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                          <tr>\n" +
+                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "\n" +
+                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
+                "                                <tr>\n" +
+                "                                  <td style=\"padding:4px;\">\n" +
+                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
+                "                                      <tr>\n" +
+                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
+                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
+                "                                            <img alt=\"twitter-logo\" height=\"24\" src=\"../../../images/social/light/twitter-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
+                "                                          </a>\n" +
+                "                                        </td>\n" +
+                "                                      </tr>\n" +
+                "                                    </table>\n" +
+                "                                  </td>\n" +
+                "                                </tr>\n" +
+                "                              </table>\n" +
+                "\n" +
+                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
+                "                                <tr>\n" +
+                "                                  <td style=\"padding:4px;\">\n" +
+                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
+                "                                      <tr>\n" +
+                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
+                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
+                "                                            <img alt=\"facebook-logo\" height=\"24\" src=\"../../../images/social/light/facebook-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
+                "                                          </a>\n" +
+                "                                        </td>\n" +
+                "                                      </tr>\n" +
+                "                                    </table>\n" +
+                "                                  </td>\n" +
+                "                                </tr>\n" +
+                "                              </table>\n" +
+                "\n" +
+                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
+                "                                <tr>\n" +
+                "                                  <td style=\"padding:4px;\">\n" +
+                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
+                "                                      <tr>\n" +
+                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
+                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
+                "                                            <img alt=\"instagram-logo\" height=\"24\" src=\"../../../images/social/light/instagram-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
+                "                                          </a>\n" +
+                "                                        </td>\n" +
+                "                                      </tr>\n" +
+                "                                    </table>\n" +
+                "                                  </td>\n" +
+                "                                </tr>\n" +
+                "                              </table>\n" +
+                "\n" +
+                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
+                "                                <tr>\n" +
+                "                                  <td style=\"padding:4px;\">\n" +
+                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
+                "                                      <tr>\n" +
+                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
+                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
+                "                                            <img alt=\"dribbble-logo\" height=\"24\" src=\"../../../images/social/light/linkedin-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
+                "                                          </a>\n" +
+                "                                        </td>\n" +
+                "                                      </tr>\n" +
+                "                                    </table>\n" +
+                "                                  </td>\n" +
+                "                                </tr>\n" +
+                "                              </table>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                          <tr>\n" +
+                "                            <td style=\"font-size:0px;word-break:break-word;\">\n" +
+                "\n" +
+                "                              <div style=\"height:20px;\"> &nbsp; </div>\n" +
+                "\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                          <tr>\n" +
+                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
+                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\">Update your <a class=\"footer-link\" href=\"https://google.com\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">email preferences</a> to choose the types of emails you receive, or you can <a href=\"https://google.com\" class=\"footer-link\" style=\"text-decoration: none; color: #fff; font-weight: 400;\"> unsubscribe </a>from all future emails.</div>\n" +
+                "                            </td>\n" +
+                "                          </tr>\n" +
+                "                        </table>\n" +
+                "                      </div>\n" +
+                "\n" +
+                "                    </td>\n" +
+                "                  </tr>\n" +
+                "                </tbody>\n" +
+                "              </table>\n" +
+                "            </div>\n" +
+                "\n" +
+                "          </td>\n" +
+                "        </tr>\n" +
+                "      </tbody>\n" +
+                "    </table>\n" +
+                "\n" +
+                "  </div>\n" +
+                "</body>\n" +
+                "\n" +
+                "</html>";
+
+        String htmlMsg = htmlMsgPre + htmlMsgPost;
+        helper.setText(htmlMsg, true); // Use this or above line.
+        helper.setTo(toEmail);
+        helper.setSubject(subject);
+
+        mailSender.send(mimeMessage);
         System.out.println("El mail fue enviado correctamente");
     }
 }

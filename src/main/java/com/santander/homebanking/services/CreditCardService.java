@@ -123,7 +123,7 @@ public class CreditCardService {
         res.setArgs(new String[]{String.valueOf(newCreditCardTransaction.getId())});
 
         try {
-            senderService.sendEmail(client.getEmail(),
+            senderService.sendEmailConfirmToken(client.getEmail(),
                     messages.getMessage("email.subject", null, LocaleContextHolder.getLocale()),
                     client.getFirstName(),
                     CardType.CREDIT.toString(),
@@ -269,6 +269,56 @@ public class CreditCardService {
         return fees;
     }
 
+    //@Scheduled(cron = "1 * * * * *")
+    public void creditCardStatement(){
+        List<Client> clients = clientRepository.findAll();
+
+        if (clients == null){
+            System.out.println("salio mal");
+            return;
+        }
+
+        for (Client c : clients){ // Por cada cliente
+            Set<CreditCard> creditCards = c.getCreditCards();
+            if (creditCards.size() != 0){
+                for (CreditCard creditCard : creditCards) { // Por cada tarjeta de credito del cliente
+                    Set<CreditCardTransaction> creditCardTransactions = creditCard.getTransactions();
+                    if (creditCardTransactions.size() != 0){
+
+                        Set<CreditCardTransaction> creditCardTransactionsPassed = creditCardTransactions.
+                                stream().filter(cct -> cct.getStatus() == Status.PASSED).collect(Collectors.toSet());
+
+                        if (creditCardTransactionsPassed.size() != 0){
+                            try {
+                                senderService.sendEmailCreditCardStatement(c.getEmail(),
+                                        messages.getMessage("email.subject.credit-card-statement", null, LocaleContextHolder.getLocale()),
+                                        c.getFirstName() + " " + c.getLastName(),
+                                        creditCardTransactionsPassed);
+                            } catch (MessagingException e){
+                                e.printStackTrace();
+                                return;
+                            }
+                        }
+                        /*for (CreditCardTransaction creditCardTransaction : creditCardTransactions) { // Por cada transaccion de tarjeta de credito
+                            if (creditCardTransaction.getStatus() == Status.PASSED) {
+                                try {
+                                    senderService.sendEmailCreditCardStatement(c.getEmail(),
+                                            messages.getMessage("email.subject.credit-card-statement", null, LocaleContextHolder.getLocale()),
+                                            c.getFirstName() + " " + c.getLastName());
+                                } catch (MessagingException e){
+                                    e.printStackTrace();
+                                    return;
+                                }
+
+                            }
+                        }*/
+                    }
+                }
+
+
+            }
+        }
+    }
 
 
 }
