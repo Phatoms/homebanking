@@ -25,6 +25,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -224,26 +225,23 @@ public class CreditCardService {
         return res;
     }
 
-
+    //second, minute, hour, day of month, month, day(s) of week
     @Scheduled(cron = "1 * * * * *")
     public void chanceToReject(){
         // me traigo todas
         List<CreditCardTransaction> setTransactions = creditCardTransactionRepository.findAll();
 
-        // las recorro y veo si tienen pendiente, y paso mas de 30 min... lo cambio a reject
+        long timeWaiting = 1;
+
+        // las recorro y veo si tienen pendiente, y paso mas de timeWaiting min... lo cambio a reject
         for (CreditCardTransaction transaction : setTransactions) {
             if(transaction.getStatus() == Status.PENDING){
 
-                if (LocalDateTime.now().getHour() - transaction.getTime().getHour() == 0) {
-                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() > 2) {
-                        transaction.setStatus(Status.REJECTED);
-                        creditCardTransactionRepository.save(transaction);
-                    }
-                } else{
-                    if(LocalDateTime.now().getMinute() - transaction.getTime().getMinute() < 2) {
-                        transaction.setStatus(Status.REJECTED);
-                        creditCardTransactionRepository.save(transaction);
-                    }
+                long minutes = Math.abs(ChronoUnit.MINUTES.between(LocalDateTime.now(), transaction.getTime()));
+
+                if(minutes >= timeWaiting){
+                    transaction.setStatus(Status.REJECTED);
+                    creditCardTransactionRepository.save(transaction);
                 }
             }
         }
@@ -269,7 +267,6 @@ public class CreditCardService {
         }
 
         return fees;
-
     }
 
 
