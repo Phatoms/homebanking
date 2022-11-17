@@ -87,6 +87,13 @@ var app = new Vue({
                 })
            },
 
+        mostrarExito: function(){
+            console.log("lance la funcion mostrame el modal!!!")
+            window.alert("muy bien bro");
+
+//            Y vuelvo a payments
+            window.location.href="/web/payments.html"
+        },
 
       confirmCreditCardTransaction: function(event){
           event.preventDefault();
@@ -95,6 +102,7 @@ var app = new Vue({
               .then(response => {
                   console.log("TOKEN RECIBIDO");
                   console.log(response);
+                  mostrarExito();
 
               })
               .catch((error) =>{
@@ -116,22 +124,25 @@ var app = new Vue({
                     this.errorMsg = error.response.data;
                     this.errorToats.show();
                 })
-           },
+       },
 
-           confirmDebitCardTransaction: function(event){
-               event.preventDefault();
-               axios.post('/api/clients/current/debitCards/confirm',
-               `id=${this.id}&token=${this.token}`)
-                   .then(response => {
-                       console.log("TOKEN RECIBIDO");
-                       console.log(response);
 
-                   })
-                   .catch((error) =>{
-                       this.errorMsg = error.response.data;
-                       this.errorToats.show();
-                   })
-              },
+
+
+        confirmDebitCardTransaction: function(event){
+           event.preventDefault();
+           axios.post('/api/clients/current/debitCards/confirm',
+           `id=${this.id}&token=${this.token}`)
+               .then(response => {
+                   console.log("TOKEN RECIBIDO");
+                   mostrarExito();
+
+               })
+               .catch((error) =>{
+                   this.errorMsg = error.response.data;
+                   this.errorToats.show();
+               })
+          },
 
 
     },
