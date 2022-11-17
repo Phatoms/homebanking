@@ -10,6 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Locale;
@@ -276,6 +278,27 @@ public class DebitCardService {
         return new ResponseUtils(true, 200, "transaction.validation.success");
     }
 
+    //second, minute, hour, day of month, month, day(s) of week
+    @Scheduled(cron = "1 * * * * *")
+    public void chanceToReject(){
+        // me traigo todas
+        List<DebitCardTransaction> setTransactions = debitCardTransactionRepository.findAll();
+
+        long timeWaiting = 1;
+
+        // las recorro y veo si tienen pendiente, y paso mas de timeWaiting min... lo cambio a reject
+        for (DebitCardTransaction transaction : setTransactions) {
+            if(transaction.getStatus() == Status.PENDING){
+
+                long minutes = Math.abs(ChronoUnit.MINUTES.between(LocalDateTime.now(), transaction.getTime()));
+
+                if(minutes >= timeWaiting){
+                    transaction.setStatus(Status.REJECTED);
+                    debitCardTransactionRepository.save(transaction);
+                }
+            }
+        }
+    }
 
 
 }
