@@ -8,7 +8,7 @@ var app = new Vue({
     token: "",
     id: "",
     payments: [1, 3, 6, 12],
-    optCardType: "debit",
+    optCardType: "credit",
     cardNumberCredit: "",
     numberCardDebit: "2222-3333-4444-5555",
     cardHolder: "Tomas Quinteros",
