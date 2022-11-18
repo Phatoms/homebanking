@@ -283,7 +283,7 @@ public class CreditCardService {
         return fees;
     }
 
-    //@Scheduled(cron = "1 * * * * *")
+    //@Scheduled(cron = "3 * * * * *")
     public void creditCardStatement(){
         List<Client> clients = clientRepository.findAll();
 
@@ -313,19 +313,7 @@ public class CreditCardService {
                                 return;
                             }
                         }
-                        /*for (CreditCardTransaction creditCardTransaction : creditCardTransactions) { // Por cada transaccion de tarjeta de credito
-                            if (creditCardTransaction.getStatus() == Status.PASSED) {
-                                try {
-                                    senderService.sendEmailCreditCardStatement(c.getEmail(),
-                                            messages.getMessage("email.subject.credit-card-statement", null, LocaleContextHolder.getLocale()),
-                                            c.getFirstName() + " " + c.getLastName());
-                                } catch (MessagingException e){
-                                    e.printStackTrace();
-                                    return;
-                                }
 
-                            }
-                        }*/
                     }
                 }
 

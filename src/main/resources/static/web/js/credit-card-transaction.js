@@ -13,7 +13,6 @@ var app = new Vue({
                 .then((response) => {
                     //get client ifo
                     this.creditCardInfo = response.data;
-                    console.log(creditCardInfo);
                     this.creditCardInfo.creditCardTransactions.sort((a,b) => parseInt(b.id - a.id))
                 })
                 .catch((error) => {

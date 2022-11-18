@@ -933,45 +933,7 @@ public class EmailSenderService {
                 "\n" +
                 "                        <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;\">\n" +
                 "\n" +
-                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
-                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
-                "                              <tr>\n" +
-                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:22px;text-align:left;color:#dddddd;\">\n" +
-                "                                    <h3 style=\"margin: 0; font-size: 22px; line-height: 20px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Billing Info</h3>\n" +
-                "                                  </div>\n" +
-                "                                </td>\n" +
-                "                              </tr>\n" +
-                "                              <tr>\n" +
-                "                                <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:left;color:#999999;\">\n" +
-                "                                    <p style=\"margin: 0;\">John Doe<br> 123 New St <br> Alexender Platz, Berlin<br> 22330<br> Germany<br>\n" +
-                "                                    </p>\n" +
-                "                                  </div>\n" +
-                "                                </td>\n" +
-                "                              </tr>\n" +
-                "                            </table>\n" +
-                "                          </div>\n" +
                 "\n" +
-                "                          <div class=\"mj-column-per-50 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;\">\n" +
-                "                            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
-                "                              <tr>\n" +
-                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;line-height:22px;text-align:right;color:#dddddd;\">\n" +
-                "                                    <h3 style=\"margin: 0; font-size: 22px; line-height: 20px; font-weight: 600; font-family: 'Inknut Antiqua', Helvetica, Arial, sans-serif;\">Shipping address</h3>\n" +
-                "                                  </div>\n" +
-                "                                </td>\n" +
-                "                              </tr>\n" +
-                "                              <tr>\n" +
-                "                                <td align=\"right\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                                  <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:right;color:#999999;\">\n" +
-                "                                    <p style=\"margin: 0;\">John Doe<br> 123 New St <br> Alexender Platz, Berlin<br> 22330<br> Germany<br>\n" +
-                "                                    </p>\n" +
-                "                                  </div>\n" +
-                "                                </td>\n" +
-                "                              </tr>\n" +
-                "                            </table>\n" +
-                "                          </div>\n" +
                 "\n" +
                 "                        </div>\n" +
                 "\n" +
@@ -996,8 +958,9 @@ public class EmailSenderService {
                 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
                 "                  <tr>\n" +
                 "                    <td align=\"left\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                      <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#999999;\">\n" +
-                "                        <p style=\"margin: 0;\">Have questions or need help? Email us at <a href=\"mailto:\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">hello@codedmails.com</a></p>\n" +
+                "                      <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#ffffff;\">\n" +
+                "                        <p style=\"margin: 0;\">Have questions or need help? Email us at <a href=\"mailto:\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
+                "testmailequipo03@gmail.com</a></p>\n" +
                 "                      </div>\n" +
                 "                    </td>\n" +
                 "                  </tr>\n" +
@@ -1010,123 +973,6 @@ public class EmailSenderService {
                 "      </table>\n" +
                 "    </div>\n" +
                 "\n" +
-                "    <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"background:#000000;background-color:#000000;width:100%;\">\n" +
-                "      <tbody>\n" +
-                "        <tr>\n" +
-                "          <td>\n" +
-                "\n" +
-                "            <div style=\"margin:0px auto;max-width:600px;\">\n" +
-                "              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"width:100%;\">\n" +
-                "                <tbody>\n" +
-                "                  <tr>\n" +
-                "                    <td style=\"direction:ltr;font-size:0px;padding:20px 0;text-align:center;\">\n" +
-                "\n" +
-                "                      <div class=\"mj-column-per-100 mj-outlook-group-fix\" style=\"font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;\">\n" +
-                "                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"vertical-align:top;\" width=\"100%\">\n" +
-                "                          <tr>\n" +
-                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\"><a class=\"footer-link\" href=\"#\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">Support</a> &nbsp; | &nbsp; <a class=\"footer-link\" href=\"#\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">Privacy Policy</a></div>\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                          <tr>\n" +
-                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\">123 Medalling Jr., Suite 100, Parrot Park, CA 12345</div>\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                          <tr>\n" +
-                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "\n" +
-                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
-                "                                <tr>\n" +
-                "                                  <td style=\"padding:4px;\">\n" +
-                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
-                "                                      <tr>\n" +
-                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
-                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
-                "                                            <img alt=\"twitter-logo\" height=\"24\" src=\"../../../images/social/light/twitter-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
-                "                                          </a>\n" +
-                "                                        </td>\n" +
-                "                                      </tr>\n" +
-                "                                    </table>\n" +
-                "                                  </td>\n" +
-                "                                </tr>\n" +
-                "                              </table>\n" +
-                "\n" +
-                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
-                "                                <tr>\n" +
-                "                                  <td style=\"padding:4px;\">\n" +
-                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
-                "                                      <tr>\n" +
-                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
-                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
-                "                                            <img alt=\"facebook-logo\" height=\"24\" src=\"../../../images/social/light/facebook-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
-                "                                          </a>\n" +
-                "                                        </td>\n" +
-                "                                      </tr>\n" +
-                "                                    </table>\n" +
-                "                                  </td>\n" +
-                "                                </tr>\n" +
-                "                              </table>\n" +
-                "\n" +
-                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
-                "                                <tr>\n" +
-                "                                  <td style=\"padding:4px;\">\n" +
-                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
-                "                                      <tr>\n" +
-                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
-                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
-                "                                            <img alt=\"instagram-logo\" height=\"24\" src=\"../../../images/social/light/instagram-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
-                "                                          </a>\n" +
-                "                                        </td>\n" +
-                "                                      </tr>\n" +
-                "                                    </table>\n" +
-                "                                  </td>\n" +
-                "                                </tr>\n" +
-                "                              </table>\n" +
-                "\n" +
-                "                              <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"float:none;display:inline-table;\">\n" +
-                "                                <tr>\n" +
-                "                                  <td style=\"padding:4px;\">\n" +
-                "                                    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-radius:3px;width:24px;\">\n" +
-                "                                      <tr>\n" +
-                "                                        <td style=\"font-size:0;height:24px;vertical-align:middle;width:24px;\">\n" +
-                "                                          <a href=\"#\" target=\"_blank\" style=\"color: #ffffff; text-decoration: none; font-weight: bold;\">\n" +
-                "                                            <img alt=\"dribbble-logo\" height=\"24\" src=\"../../../images/social/light/linkedin-logo-transparent-light.png\" style=\"border-radius:3px;display:block;\" width=\"24\">\n" +
-                "                                          </a>\n" +
-                "                                        </td>\n" +
-                "                                      </tr>\n" +
-                "                                    </table>\n" +
-                "                                  </td>\n" +
-                "                                </tr>\n" +
-                "                              </table>\n" +
-                "\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                          <tr>\n" +
-                "                            <td style=\"font-size:0px;word-break:break-word;\">\n" +
-                "\n" +
-                "                              <div style=\"height:20px;\"> &nbsp; </div>\n" +
-                "\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                          <tr>\n" +
-                "                            <td align=\"center\" style=\"font-size:0px;padding:10px 25px;word-break:break-word;\">\n" +
-                "                              <div style=\"font-family:Montserrat, Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:center;color:#999999;\">Update your <a class=\"footer-link\" href=\"https://google.com\" style=\"text-decoration: none; color: #fff; font-weight: 400;\">email preferences</a> to choose the types of emails you receive, or you can <a href=\"https://google.com\" class=\"footer-link\" style=\"text-decoration: none; color: #fff; font-weight: 400;\"> unsubscribe </a>from all future emails.</div>\n" +
-                "                            </td>\n" +
-                "                          </tr>\n" +
-                "                        </table>\n" +
-                "                      </div>\n" +
-                "\n" +
-                "                    </td>\n" +
-                "                  </tr>\n" +
-                "                </tbody>\n" +
-                "              </table>\n" +
-                "            </div>\n" +
-                "\n" +
-                "          </td>\n" +
-                "        </tr>\n" +
-                "      </tbody>\n" +
-                "    </table>\n" +
                 "\n" +
                 "  </div>\n" +
                 "</body>\n" +

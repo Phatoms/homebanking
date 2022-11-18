@@ -48,7 +48,7 @@ public class HomebankingApplication {
 		return (args) -> {
 
 //			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
-			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("123"));
+			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
 
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
@@ -191,8 +191,6 @@ public class HomebankingApplication {
 			transactionRepository.save(t7);
 			transactionRepository.save(t8);
 
-
-			creditCardService.creditCardStatement();
 
 		};
 	}
