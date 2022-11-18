@@ -126,28 +126,28 @@ var app = new Vue({
                 })
        },
 
-
-
-
-        confirmDebitCardTransaction: function(event){
-           event.preventDefault();
-           axios.post('/api/clients/current/debitCards/confirm',
-           `id=${this.id}&token=${this.token}`)
-               .then(response => {
-                   console.log("TOKEN RECIBIDO");
-                   mostrarExito();
-
-               })
-               .catch((error) =>{
-                   this.errorMsg = error.response.data;
-                   this.errorToats.show();
-               })
-          },
-
-
+    confirmDebitCardTransaction: function (event) {
+      event.preventDefault();
+      axios
+        .post(
+          "/api/clients/current/debitCards/confirm",
+          `id=${this.id}&token=${this.token}`
+        )
+        .then((response) => {
+          console.log("TOKEN DEBIT RECIBIDO");
+          window.location.href = "/web/payments.html";
+          this.confirm.show();
+        })
+        .catch((error) => {
+          this.errorMsg = error.response.data;
+          this.errorToats.show();
+        });
     },
-    mounted: function(){
-        this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
-        //getFeeData();
-    }
-})
+  },
+  mounted: function () {
+    this.errorToats = new bootstrap.Toast(document.getElementById("danger-toast"));
+    this.checkModal = new bootstrap.Modal(document.getElementById('checkModal'));
+    this.confirm = new bootstrap.Modal(document.getElementById('confirModal'));
+    //getFeeData();
+  },
+});
