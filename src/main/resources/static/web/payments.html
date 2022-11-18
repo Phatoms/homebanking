@@ -63,7 +63,13 @@
                             <li>
                                 <a href="/web/payments.html" class="nav-link active">
                                     <i class="bi-wallet2"></i>
-                                    Payments
+                                    Pay
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/web/user.html" class="nav-link link-dark">
+                                    <i class="bi bi-person-circle"></i>
+                                    User
                                 </a>
                             </li>
                         </ul>
@@ -187,7 +193,7 @@
                                             class="btn btn-sm btn-outline-success m">Calculate fee</button>
                                     </div>
 
-                                    <label for="payments" class="form-label">Payments</label>
+                                    <label for="payments" class="form-label">Fee Amount</label>
                                     <select id="payments" v-model="loanTypeId" v-on:change="changedPayment($event)"
                                         class="form-select" aria-label="Default select example" required>
                                         <option v-for="(paymentFee, id) in paymentsFeesObject" v-bind:value="id">
