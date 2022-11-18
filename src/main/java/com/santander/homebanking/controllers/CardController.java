@@ -120,8 +120,6 @@ public class CardController {
         }
     }
 
-
-    //Confrimamos el pago de la tarjeta de credito
     @PostMapping(value = "/clients/current/creditCards/confirm")
     public ResponseEntity<Object> confirmCreditCardTransaction(@RequestParam Long id, @RequestParam String token,
                                                                 HttpSession session){
@@ -138,8 +136,6 @@ public class CardController {
         }
     }
 
-
-    // Pagar con debito, pasar cvv, pin   pre transaccion return id de la transaccion
     @PostMapping(value = "/clients/current/debitCards/pay")
     public ResponseEntity<Object> newDebitCardTransaction(@RequestParam  String numberCardDebit,
                                                           @RequestParam  String cardHolder,
@@ -186,7 +182,6 @@ public class CardController {
         HashMap<String, Double> fees = creditCardService.getFees(feesDTO);
 
         return fees;
-
     }
 
     @GetMapping(value = "/clients/current/creditCards/{id}")
