@@ -8,6 +8,7 @@ import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -46,18 +47,6 @@ public class CardService {
             return null;
         }
     }
-/*
-    public Set<CardDTO> findAllCards(){
-        return cardRepository.findAllCards().stream().map(CardDTO::new).collect(Collectors.toSet());
-    }
-
-    public Set<String> findAllCardsString(){
-        return cardRepository.findAllCardsString().stream().collect(Collectors.toSet());
-    }
-
-    public Set<CardSimpleDTO> findAllCardsDTO(){
-        return cardRepository.findAllCards().stream().map(CardSimpleDTO::new).collect(Collectors.toSet());
-    }*/
 
     public CardDTO newBasicCard(String cardColor, CardType cardType,
                                 HttpSession session) {
@@ -99,6 +88,7 @@ public class CardService {
 
         return res;
     }
+
 
 
 

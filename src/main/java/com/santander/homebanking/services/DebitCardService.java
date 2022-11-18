@@ -155,7 +155,7 @@ public class DebitCardService {
         res.setArgs(new String[]{String.valueOf(transaction.getId())});
 
         try {
-            senderService.sendEmail(client.getEmail(),
+            senderService.sendEmailConfirmToken(client.getEmail(),
                     messages.getMessage("email.subject", null, LocaleContextHolder.getLocale()),
                     client.getFirstName(),
                     CardType.DEBIT.toString(),
