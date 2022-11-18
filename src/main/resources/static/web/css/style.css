@@ -8,16 +8,25 @@ body{
 }
 .account{
     background: linear-gradient(45deg,#ee0979,#ff6a00);
+    background: linear-gradient(45deg,#ecad36,#bea328);
     color: white;
     box-shadow: 1px 1px 5px black;
+    cursor: pointer;
 }
 
+.card-loan{
+    background: linear-gradient(45deg,#ed4f1c,#bea328);
+    color: white;
+    box-shadow: 1px 1px 5px black;
+    cursor: pointer;
+}
 .account:hover{
     box-shadow: 2px 2px 10px black;
 }
 
 .account-details-header{
     background: linear-gradient(45deg,#ee0978,#ff6a00);
+    background: linear-gradient(45deg,#ecad36,#bea328);
     color: white;
 }
 
@@ -40,6 +49,7 @@ body{
 
 .credit{
     background: linear-gradient(45deg,#ee09cf,#0026ff);
+    background: linear-gradient(45deg,#ecad36,#bea328);
     color: white;
 }
 

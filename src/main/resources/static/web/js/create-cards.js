@@ -5,6 +5,8 @@ var app = new Vue({
         errorMsg: null,
         cardType:"none",
         cardColor:"none",
+        maxLimit: 0.0,
+        accountNumber: ""
     },
     methods:{
         formatDate: function(date){
