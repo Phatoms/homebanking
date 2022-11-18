@@ -2,6 +2,7 @@ package com.santander.homebanking;
 
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.*;
+import com.santander.homebanking.services.CreditCardService;
 import com.santander.homebanking.services.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -24,6 +25,9 @@ public class HomebankingApplication {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
+	@Autowired
+	CreditCardService creditCardService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
@@ -38,13 +42,15 @@ public class HomebankingApplication {
 									  LoanRepository loanRepository,
 									  ClientLoansRepository clientLoansRepository,
 									  TransactionRepository transactionRepository,
-									  InterestRateRepository interestRateRepository
+									  InterestRateRepository interestRateRepository,
+									  CreditCardTransactionRepository creditCardTransactionRepository
 	){
 		return (args) -> {
 
 //			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
-			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("123"));
+			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
+
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
 			Client client4 = new Client("antonio", "fumero", "aefumero@gmail.com", passwordEncoder.encode("123"));
 
@@ -108,6 +114,8 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 = new ClientLoan(100000.0, 24, client3, loan2);
 			ClientLoan clientLoan4 = new ClientLoan(200000.0, 36, client3, loan3);
 
+
+
 			/// Modulo de prueba con card1
 			CreditCard creditCard1 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
 			CreditCard creditCard2 = new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
@@ -115,8 +123,14 @@ public class HomebankingApplication {
 			client1.addCreditCard(creditCard1);
 			client4.addCreditCard(creditCard2);
 
+			CreditCard creditCard3 = new CreditCard("Juan Pedro", "2111-2222-3333-4444", 163, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0);
+			client2.addCreditCard(creditCard3);
+
 			DebitCard debitCard = new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234");
 			account1.addDebitCard(debitCard);
+
+
+
 
 			Double baseInterestRate = 0.0;
 			for (int i = 1; i < 25; i++){
@@ -139,8 +153,25 @@ public class HomebankingApplication {
 
 			creditCardRepository.save(creditCard1);
 			creditCardRepository.save(creditCard2);
-
+			creditCardRepository.save(creditCard3);
 			debitCardRepository.save(debitCard);
+
+			CreditCardTransaction creditCardTransaction1 = new CreditCardTransaction(100000.0, "Televisor Samsung 50 pulgadas", LocalDateTime.now(),
+					"123456", Status.PASSED, 12, 0.12, creditCard1);
+
+			CreditCardTransaction creditCardTransaction2 = new CreditCardTransaction(280000.0, "Celular Samsung S22", LocalDateTime.now(),
+					"123456", Status.PASSED, 24, 0.2, creditCard1);
+
+			CreditCardTransaction creditCardTransaction3 = new CreditCardTransaction(3800.0, "Supermercado Disco", LocalDateTime.now(),
+					"123456", Status.PASSED, 3, 0.03, creditCard1);
+
+			CreditCardTransaction creditCardTransaction4 = new CreditCardTransaction(3800.0, "Supermercado Disco", LocalDateTime.now(),
+					"123456", Status.PASSED, 3, 0.03, creditCard2);
+
+			creditCardTransactionRepository.save(creditCardTransaction1);
+			creditCardTransactionRepository.save(creditCardTransaction2);
+			creditCardTransactionRepository.save(creditCardTransaction3);
+			creditCardTransactionRepository.save(creditCardTransaction4);
 
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);
@@ -159,6 +190,7 @@ public class HomebankingApplication {
 			transactionRepository.save(t6);
 			transactionRepository.save(t7);
 			transactionRepository.save(t8);
+
 
 		};
 	}
