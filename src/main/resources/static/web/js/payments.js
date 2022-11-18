@@ -108,10 +108,14 @@ var app = new Vue({
         .then((response) => {
           console.log("TOKEN CREDIT RECIBIDO");
 //          window.location.href = "/web/payments.html";
-          window.location.reload();
+//          window.location.reload();
+          this.createdToken = false;
+          this.optCardType = "credit";
+
           this.confirm.show();
         })
         .catch((error) => {
+           this.token = "";
           this.errorMsg = error.response.data;
           this.errorToats.show();
         });
@@ -131,6 +135,7 @@ var app = new Vue({
           this.id = response.data;
         })
         .catch((error) => {
+
           this.errorMsg = error.response.data;
           this.errorToats.show();
         });
@@ -146,10 +151,14 @@ var app = new Vue({
         .then((response) => {
           console.log("TOKEN DEBIT RECIBIDO");
 //          window.location.href = "/web/payments.html";
-          window.location.reload();
+//          window.location.reload();
+          this.createdToken = false;
+          this.optCardType = "credit";
+
           this.confirm.show();
         })
         .catch((error) => {
+           this.token = "";
           this.errorMsg = error.response.data;
           this.errorToats.show();
         });

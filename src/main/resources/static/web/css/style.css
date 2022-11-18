@@ -82,3 +82,14 @@ body{
 .bg-color{
     background-color: #eee;
 }
+
+
+.tresColumnas th, td {
+    width: 33.3%;
+    word-wrap: break-word;
+}
+
+.cuatroColumnas th, td {
+    width: 25%;
+    word-wrap: break-word;
+}

@@ -15,6 +15,7 @@ var app = new Vue({
                     this.clientInfo = response.data;
                     this.creditCards = this.clientInfo.creditCards;
                     this.debitCards = this.clientInfo.debitCards;
+                    console.log(this.clientInfo);
                 })
                 .catch((error) => {
                     this.errorMsg = "Error getting data";

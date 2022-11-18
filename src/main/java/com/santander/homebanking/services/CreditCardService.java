@@ -239,29 +239,6 @@ public class CreditCardService {
         return res;
     }
 
-    //second, minute, hour, day of month, month, day(s) of week
-    @Scheduled(cron = "1 * * * * *")
-    public void chanceToReject(){
-        // me traigo todas
-        List<CreditCardTransaction> setTransactions = creditCardTransactionRepository.findAll();
-
-        long timeWaiting = 1;
-
-        // las recorro y veo si tienen pendiente, y paso mas de timeWaiting min... lo cambio a reject
-        for (CreditCardTransaction transaction : setTransactions) {
-            if(transaction.getStatus() == Status.PENDING){
-
-                long minutes = Math.abs(ChronoUnit.MINUTES.between(LocalDateTime.now(), transaction.getTime()));
-
-                if(minutes >= timeWaiting){
-                    transaction.setStatus(Status.REJECTED);
-                    creditCardTransactionRepository.save(transaction);
-                }
-            }
-        }
-    }
-
-
     public HashMap<String, Double> getFees(FeesDTO feesDTO){
 
         HashMap<String, Double> fees = new HashMap<>();
@@ -316,8 +293,6 @@ public class CreditCardService {
 
                     }
                 }
-
-
             }
         }
     }
