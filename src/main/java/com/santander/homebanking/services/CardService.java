@@ -5,6 +5,8 @@ import com.santander.homebanking.dtos.CardSimpleDTO;
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.repositories.ClientRepository;
+import com.santander.homebanking.repositories.CreditCardTransactionRepository;
+import com.santander.homebanking.repositories.DebitCardTransactionRepository;
 import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +29,12 @@ public class CardService {
     private CardRepository cardRepository;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private CreditCardTransactionRepository creditCardTransactionRepository;
+
+    @Autowired
+    private DebitCardTransactionRepository debitCardTransactionRepository;
+
     private final int MAX_CARDS_TYPE = 3;
 
     private Client client;
@@ -90,6 +101,40 @@ public class CardService {
     }
 
 
+    //second, minute, hour, day of month, month, day(s) of week
+    @Scheduled(cron = "1 * * * * *")
+    public void chanceToReject(){
+        // me traigo todas
+        List<CreditCardTransaction> setCreditTransactions = creditCardTransactionRepository.findAll();
+
+        long timeWaiting = 1;
+
+        // las recorro y veo si tienen pendiente, y paso mas de timeWaiting min... lo cambio a reject
+        for (CreditCardTransaction transaction : setCreditTransactions) {
+            if(transaction.getStatus() == Status.PENDING){
+
+                long minutes = Math.abs(ChronoUnit.MINUTES.between(LocalDateTime.now(), transaction.getTime()));
+
+                if(minutes >= timeWaiting){
+                    transaction.setStatus(Status.REJECTED);
+                    creditCardTransactionRepository.save(transaction);
+                }
+            }
+        }
+
+        List<DebitCardTransaction> setDebitTransactions = debitCardTransactionRepository.findAll();
+        for (DebitCardTransaction transaction : setDebitTransactions) {
+            if(transaction.getStatus() == Status.PENDING){
+
+                long minutes = Math.abs(ChronoUnit.MINUTES.between(LocalDateTime.now(), transaction.getTime()));
+
+                if(minutes >= timeWaiting){
+                    transaction.setStatus(Status.REJECTED);
+                    debitCardTransactionRepository.save(transaction);
+                }
+            }
+        }
+    }
 
 
 
