@@ -9,6 +9,7 @@ import com.santander.homebanking.repositories.CreditCardTransactionRepository;
 import com.santander.homebanking.repositories.InterestRateRepository;
 import com.santander.homebanking.utils.CardUtils;
 import com.santander.homebanking.utils.ResponseUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -25,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CreditCardService {
+
+    final static Logger logger = Logger.getLogger(CreditCardService.class);
 
     @Autowired
     private CardService cardService;
@@ -286,7 +289,7 @@ public class CreditCardService {
                                         c.getFirstName() + " " + c.getLastName(),
                                         creditCardTransactionsPassed);
                             } catch (MessagingException e){
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                                 return;
                             }
                         }
