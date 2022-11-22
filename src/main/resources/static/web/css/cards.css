@@ -76,6 +76,19 @@
     height: 30px;
 }
 
+p {
+  margin: 0;
+}
+
+.topnav {
+  display: flex;
+}
+
+.topnav .vs {
+  padding-bottom: 100px;
+  padding-top: 100px;
+}
+
 .plastic-card_numer {
     display: block;
     width: 100%;
