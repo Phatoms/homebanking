@@ -35,6 +35,13 @@ public class IntegrationJpaTest {
     @Autowired
     CardRepository cardRepository;
 
+    @Autowired
+    CreditCardTransactionRepository  creditCardTransactionRepository;
+
+    @Autowired
+    DebitCardTransactionRepository debitCardTransactionRepository;
+
+
     @MockBean
     PasswordEncoder passwordEncoder;
 
@@ -146,4 +153,36 @@ public class IntegrationJpaTest {
         assertEquals(5000, account.getBalance());
         assertEquals("tomas", account.getClient().getFirstName());
     }
+
+    @Test
+    void testFindAllCreditTransaction(){
+        List<CreditCardTransaction> creditCardTransactions = creditCardTransactionRepository.findAll();
+        assertFalse(creditCardTransactions.isEmpty());
+    }
+
+    @Test
+    void testFindCreditById(){
+        Optional<CreditCardTransaction> creditCardTransactions = creditCardTransactionRepository.findById(1L);
+        assertTrue(creditCardTransactions.isPresent());
+        assertEquals("1111-2222-3333-4444", creditCardTransactions.orElseThrow().getCreditCard().getNumber());
+    }
+
+    @Test
+    void testFindAllDebitCardTransactions(){
+        List<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findAll();
+        assertFalse(debitCardTransactions.isEmpty());
+    }
+
+    @Test
+    void testFindDebitCardTransactionsByAccountNumber(){
+        Optional<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findById(1L);
+        assertTrue(debitCardTransactions.isPresent());
+        assertEquals("VIN005", debitCardTransactions.orElseThrow().getAccount().getNumber());
+    }
+
+
+
+
+
+
 }
