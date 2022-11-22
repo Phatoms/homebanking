@@ -2,7 +2,7 @@ package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.TransactionDTO;
 import com.santander.homebanking.models.Client;
-import com.santander.homebanking.services.TransactionService;
+import com.santander.homebanking.services.implement.TransactionImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import java.util.Set;
 public class TransactionController {
 
     @Autowired
-    TransactionService transactionService;
+    TransactionImplService transactionImplService;
 
     @ExceptionHandler(ConstraintViolationException.class) @ResponseStatus(HttpStatus.BAD_REQUEST)
     ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e)
@@ -34,13 +34,13 @@ public class TransactionController {
 
     @GetMapping(value = "/{description}/{amount}")
     public Set<TransactionDTO> getTransactionByDescriptionOrAmount(@PathVariable String description, @PathVariable Long amount){
-        return transactionService.getTransactionByDescriptionOrAmount(description, amount);
+        return transactionImplService.getTransactionByDescriptionOrAmount(description, amount);
     }
 
     @GetMapping(value = "/transaction-type/{transactionType}")
     public Set<TransactionDTO> getTransactionByTransactionType(@PathVariable String transactionType){
         try {
-            return transactionService.getTransactionByTransactionType(transactionType);
+            return transactionImplService.getTransactionByTransactionType(transactionType);
         }catch (IllegalArgumentException e){
             return null;
         }
@@ -52,7 +52,7 @@ public class TransactionController {
                                                   @RequestParam @NotBlank @Size(min = 6, max = 6) String toAccountNumber,
                                                   @RequestParam @NotBlank @Size(min = 1, max = 200) String description,
                                                   HttpSession session){
-        if (transactionService.addTransactions(amount, fromAccountNumber, toAccountNumber, description,
+        if (transactionImplService.addTransactions(amount, fromAccountNumber, toAccountNumber, description,
                 ((Client)session.getAttribute("client")).getEmail())){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {

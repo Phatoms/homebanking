@@ -2,9 +2,9 @@ package com.santander.homebanking.controllers;
 
 import com.santander.homebanking.dtos.*;
 import com.santander.homebanking.repositories.DebitCardTransactionRepository;
-import com.santander.homebanking.services.CardService;
-import com.santander.homebanking.services.CreditCardService;
-import com.santander.homebanking.services.DebitCardService;
+import com.santander.homebanking.services.implement.CardImplService;
+import com.santander.homebanking.services.implement.CreditCardImplService;
+import com.santander.homebanking.services.implement.DebitCardImplService;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -25,16 +25,16 @@ import java.util.Set;
 public class CardController {
 
     @Autowired
-    private CardService cardService;
+    private CardImplService cardImplService;
 
     @Autowired
     private MessageSource messages;
 
     @Autowired
-    private CreditCardService creditCardService;
+    private CreditCardImplService creditCardImplService;
 
     @Autowired
-    private DebitCardService debitCardService;
+    private DebitCardImplService debitCardImplService;
 
     @Autowired
     private  DebitCardTransactionRepository debitCardTransactionRepository;
@@ -42,18 +42,18 @@ public class CardController {
 
     @GetMapping(value = "/cards/card-holder/{cardHolder}")
     public Set<CardDTO> getCardHolders(@PathVariable String cardHolder){
-        return cardService.getCardHolders(cardHolder);
+        return cardImplService.getCardHolders(cardHolder);
     }
 
     @GetMapping(value = "/cards/{number}")
     public Set<CardDTO> getCardByNumber(@PathVariable String number){
-        return cardService.getCardByNumber(number);
+        return cardImplService.getCardByNumber(number);
     }
 
     @GetMapping(value = "/cards/cardType/{cardType}")
     public Set<CardDTO> getCardByCardType(@PathVariable String cardType){
         try {
-            return cardService.getCardByCardType(cardType);
+            return cardImplService.getCardByCardType(cardType);
         }catch (IllegalArgumentException e){
             return null;
         }
@@ -63,7 +63,7 @@ public class CardController {
     public ResponseEntity<Object> addCreditCards(@RequestParam @NotBlank String cardColor,
                                                  @RequestParam Double maxLimit,
                                                  HttpSession session) {
-        ResponseUtils res = creditCardService.addCard(cardColor, maxLimit, session);
+        ResponseUtils res = creditCardImplService.addCard(cardColor, maxLimit, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -80,7 +80,7 @@ public class CardController {
     public ResponseEntity<Object> addDebitCards(@RequestParam @NotBlank String cardColor,
                                                 @RequestParam @NotBlank String accountNumber,
                                                 HttpSession session) {
-        ResponseUtils res = debitCardService.addCard(cardColor, accountNumber, session);
+        ResponseUtils res = debitCardImplService.addCard(cardColor, accountNumber, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -106,7 +106,7 @@ public class CardController {
                                                            HttpSession session){
 
 
-        ResponseUtils res = creditCardService.createPendingCreditCardTransaction(cardNumberCredit, cardHolder, amount, description,
+        ResponseUtils res = creditCardImplService.createPendingCreditCardTransaction(cardNumberCredit, cardHolder, amount, description,
                 payments, cvv, thruDate, session);
 
         if (res.getDone()){
@@ -123,7 +123,7 @@ public class CardController {
     @PostMapping(value = "/clients/current/creditCards/confirm")
     public ResponseEntity<Object> confirmCreditCardTransaction(@RequestParam Long id, @RequestParam String token,
                                                                 HttpSession session){
-        ResponseUtils res = creditCardService.validateCreditCardTransaction(id, token, session);
+        ResponseUtils res = creditCardImplService.validateCreditCardTransaction(id, token, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -145,7 +145,7 @@ public class CardController {
                                                           @RequestParam  String thruDate,
                                                           HttpSession session){
 
-        ResponseUtils res = debitCardService.createPreTransaction(numberCardDebit,cardHolder, description, amount, cvv, thruDate, session);
+        ResponseUtils res = debitCardImplService.createPreTransaction(numberCardDebit,cardHolder, description, amount, cvv, thruDate, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -163,7 +163,7 @@ public class CardController {
                                                                @RequestParam String token,
                                                                HttpSession   session){
 
-        ResponseUtils res = debitCardService.confirmTransaction(id, token, session);
+        ResponseUtils res = debitCardImplService.confirmTransaction(id, token, session);
 
         if (res.getDone()){
             return new ResponseEntity<>(
@@ -179,7 +179,7 @@ public class CardController {
     @PostMapping(value = "/clients/current/creditCards/fees")
     public HashMap<String, Double> getFees(@RequestBody FeesDTO feesDTO){
 
-        HashMap<String, Double> fees = creditCardService.getFees(feesDTO);
+        HashMap<String, Double> fees = creditCardImplService.getFees(feesDTO);
 
         return fees;
     }
@@ -187,7 +187,7 @@ public class CardController {
     @GetMapping(value = "/clients/current/creditCards/{id}")
     public CreditCardWTransactionsDTO getCreditCardTransactions(@PathVariable long id, HttpSession session){
 
-        return creditCardService.getSessionCreditCardById(id, session).map(CreditCardWTransactionsDTO::new).orElse(null);
+        return creditCardImplService.getSessionCreditCardById(id, session).map(CreditCardWTransactionsDTO::new).orElse(null);
     }
 
 

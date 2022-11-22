@@ -1,23 +1,12 @@
 package com.santander.homebanking;
 
 import com.santander.homebanking.models.InterestRate;
-import com.santander.homebanking.repositories.InterestRateRepository;
 import com.santander.homebanking.utils.CardUtils;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.HashMap;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest
 public class CardUtilsTests {
 
     @Test
@@ -58,6 +47,4 @@ public class CardUtilsTests {
         assertThat(fee, is(not(nullValue())));
         assertThat(fee, is(3353.66));
     }
-
-
 }

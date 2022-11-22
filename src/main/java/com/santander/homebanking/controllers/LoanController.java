@@ -4,7 +4,7 @@ import com.santander.homebanking.dtos.ClientLoanDTO;
 import com.santander.homebanking.dtos.LoanApplicationDTO;
 import com.santander.homebanking.dtos.LoanDTO;
 import com.santander.homebanking.models.Client;
-import com.santander.homebanking.services.LoanService;
+import com.santander.homebanking.services.implement.LoanImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +20,21 @@ import java.util.Set;
 public class LoanController {
 
     @Autowired
-    LoanService loanService;
+    LoanImplService loanImplService;
 
     @GetMapping(value = "/loans")
     public Set<LoanDTO> getLoans() {
-        return loanService.getLoans();
+        return loanImplService.getLoans();
     }
 
     @GetMapping(value = "/loans/name/{name}")
     public Set<LoanDTO> getLoansByNameStartingWith(@PathVariable String name) {
-        return loanService.getLoansByNameStartingWith(name);
+        return loanImplService.getLoansByNameStartingWith(name);
     }
 
     @GetMapping(value = "/loans/max-amount/less-than/{number}")
     public Set<LoanDTO> getLoansByMaxAmountLessThan(@PathVariable Double number) {
-        return loanService.getLoansByMaxAmountLessThan(number);
+        return loanImplService.getLoansByMaxAmountLessThan(number);
     }
 
     @PostMapping(value = "/loans")
@@ -44,7 +44,7 @@ public class LoanController {
             return new ResponseEntity<>("No paso la validacion", HttpStatus.FORBIDDEN);
         }
 
-        if (loanService.newLoan(loanApplicationDTO, (Client) session.getAttribute("client"))){
+        if (loanImplService.newLoan(loanApplicationDTO, (Client) session.getAttribute("client"))){
             return new ResponseEntity<>("Prestamo creado", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("El prestamo no se pudo crear", HttpStatus.FORBIDDEN);
@@ -53,7 +53,7 @@ public class LoanController {
 
     @GetMapping(value = "/clients/current/loans")
     public Set<ClientLoanDTO> getLoansCurrentClient(HttpSession session){
-        return loanService.getLoansCurrentClient(session);
+        return loanImplService.getLoansCurrentClient(session);
     }
 
 

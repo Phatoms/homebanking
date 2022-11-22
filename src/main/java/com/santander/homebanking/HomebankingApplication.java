@@ -2,8 +2,6 @@ package com.santander.homebanking;
 
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.*;
-import com.santander.homebanking.services.CreditCardService;
-import com.santander.homebanking.services.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +14,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @SpringBootApplication
 @EnableScheduling
@@ -157,10 +154,10 @@ public class HomebankingApplication {
 			debitCardRepository.save(debitCard);
 
 			CreditCardTransaction creditCardTransaction1 = new CreditCardTransaction(100000.0, "Televisor Samsung 50 pulgadas", LocalDateTime.now(),
-					"123456", Status.PASSED, 12, 0.12, creditCard1);
+					"123456", Status.PASSED, 12, 0.05, creditCard1);
 
 			CreditCardTransaction creditCardTransaction2 = new CreditCardTransaction(280000.0, "Celular Samsung S22", LocalDateTime.now(),
-					"123456", Status.PASSED, 24, 0.2, creditCard1);
+					"123456", Status.PASSED, 24, 0.08, creditCard1);
 
 			CreditCardTransaction creditCardTransaction3 = new CreditCardTransaction(3800.0, "Supermercado Disco", LocalDateTime.now(),
 					"123456", Status.PASSED, 3, 0.03, creditCard1);
