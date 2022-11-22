@@ -25,8 +25,8 @@ public class HomebankingApplication {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
-	@Autowired
-	CreditCardService creditCardService;
+//	@Autowired
+//	CreditCardService creditCardService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
