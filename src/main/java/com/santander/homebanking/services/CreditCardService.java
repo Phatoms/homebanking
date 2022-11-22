@@ -246,8 +246,6 @@ public class CreditCardService {
 
         HashMap<String, Double> fees = new HashMap<>();
 
-        fees.put(String.valueOf(feesDTO.getPayments()[0]), 2000.0);
-
         for(Integer payments : feesDTO.getPayments()){
             InterestRate interestRate = interestRateRepository.findByFeeNumber(payments).orElse(null);
             if (interestRate == null){
