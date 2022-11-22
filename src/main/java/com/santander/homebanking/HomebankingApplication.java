@@ -47,8 +47,8 @@ public class HomebankingApplication {
 	){
 		return (args) -> {
 
-//			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
-			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("123"));
+			Client client1 = new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", passwordEncoder.encode("123"));
+//			Client client1 = new Client("tomas", "quinteros", "juanpedro4288@gmail.com", passwordEncoder.encode("123"));
 			Client client2 = new Client("jose", "perez", "jose@mindhub.com", passwordEncoder.encode("password2"));
 
 			Client client3 = new Client("admin", "admin", "admin@admin", passwordEncoder.encode("admin"));
@@ -135,7 +135,7 @@ public class HomebankingApplication {
 			Double baseInterestRate = 0.0;
 			for (int i = 1; i < 25; i++){
 				baseInterestRate += 0.005;
-				baseInterestRate = new BigDecimal(baseInterestRate).setScale(2, RoundingMode.HALF_UP).doubleValue();
+				baseInterestRate = new BigDecimal(baseInterestRate).setScale(3, RoundingMode.HALF_UP).doubleValue();
 				InterestRate interestRate = new InterestRate(i, baseInterestRate);
 				interestRateRepository.save(interestRate);
 			}
