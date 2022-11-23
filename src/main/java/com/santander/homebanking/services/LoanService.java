@@ -20,9 +20,6 @@ public interface LoanService {
 
     Boolean newLoan(LoanApplicationDTO loanApplicationDTO, Client client);
 
-    private Boolean validateNewLoan(LoanApplicationDTO loanApplicationDTO, Client client) {
-        return null;
-    }
-
+    Boolean validateNewLoan(LoanApplicationDTO loanApplicationDTO, Client client);
 
 }

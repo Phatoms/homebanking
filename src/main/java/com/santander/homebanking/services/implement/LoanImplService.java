@@ -26,6 +26,7 @@ public class LoanImplService implements LoanService {
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
     private ClientLoansRepository clientLoansRepository;
+
     @Autowired
     public LoanImplService(LoanRepository loanRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, ClientLoansRepository clientLoansRepository) {
         this.loanRepository = loanRepository;
@@ -84,7 +85,7 @@ public class LoanImplService implements LoanService {
     }
 
 
-    private Boolean validateNewLoan(LoanApplicationDTO loanApplicationDTO, Client client){
+    public Boolean validateNewLoan(LoanApplicationDTO loanApplicationDTO, Client client){
         Boolean result = false;
         loan = loanRepository.findById(loanApplicationDTO.getLoanId()).orElse(null);
         List<Loan> loans = client.getLoans().stream()
