@@ -46,16 +46,16 @@ var app = new Vue({
                     }
                 }
                 if(this.cardType == 'CREDIT'){
-                    axios.post(`http://localhost:8080/api/clients/current/creditCards?cardColor=${this.cardColor}&maxLimit=${this.maxLimit}`)
+                    axios.post(`/api/clients/current/creditCards?cardColor=${this.cardColor}&maxLimit=${this.maxLimit}`)
                         .then(response => window.location.href = "/web/cards.html")
                         .catch((error) =>{
                             this.errorMsg = error.response.data;
                             this.errorToats.show();
                         })
                 }else{
-                    this.errorMsg = "aaaaaaaaaaaaaaaaaaaaaaaaaa";
+                    this.errorMsg = "Error";
                     this.errorToats.show();
-                    axios.post(`http://localhost:8080/api/clients/current/debitCards?accountNumber=${this.accountNumber}&cardColor=${this.cardColor}`)
+                    axios.post(`/api/clients/current/debitCards?accountNumber=${this.accountNumber}&cardColor=${this.cardColor}`)
                         .then(response => window.location.href = "/web/cards.html")
                         .catch((error) =>{
                             this.errorMsg = error.response.data;
