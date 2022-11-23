@@ -44,7 +44,7 @@ public class CreditCardImplService implements CreditCardService {
     @Autowired
     private MessageSource messages;
 
-    @Autowired
+
     public CreditCardImplService(CardService cardService, ClientService clientService, CreditCardRepository creditCardRepository, ClientRepository clientRepository, CreditCardTransactionRepository creditCardTransactionRepository, InterestRateRepository interestRateRepository, EmailSenderService senderService) {
         this.cardService = cardService;
         this.clientService = clientService;

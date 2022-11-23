@@ -29,19 +29,17 @@ public class ClientImplService implements ClientService {
     private ClientRepository clientRepository;
     private AccountRepository accountRepository;
     private CardRepository cardRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
-    @Autowired
-    public ClientImplService(ClientRepository clientRepository, AccountRepository accountRepository, CardRepository cardRepository) {
+    public ClientImplService(ClientRepository clientRepository, AccountRepository accountRepository,
+                             CardRepository cardRepository, PasswordEncoder passwordEncoder) {
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
         this.cardRepository = cardRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public ClientImplService() {
-    }
 
     public List<ClientDTO> getClients() {
         return clientRepository.findAll().stream().map(ClientDTO::new).collect(toList());
