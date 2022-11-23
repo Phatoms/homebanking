@@ -50,17 +50,17 @@ public class RepositoriesTest {
         assertThat(accounts, hasItem(hasProperty("number", is("VIN005"))));
     }
 
-    @Test
-    public void existCards(){
-        List<Card> cards = cardRepository.findAll();
-        assertThat(cards, is(not(empty())));
-    }
-
-    @Test
-    public void existCardGold(){
-        List<Card> cards = cardRepository.findAll();
-        assertThat(cards, hasItem(hasProperty("color", is(CardColor.GOLD))));
-    }
+//    @Test
+//    public void existCards(){
+//        List<Card> cards = cardRepository.findAll();
+//        assertThat(cards, is(not(empty())));
+//    }
+//
+//    @Test
+//    public void existCardGold(){
+//        List<Card> cards = cardRepository.findAll();
+//        assertThat(cards, hasItem(hasProperty("color", is(CardColor.GOLD))));
+//    }
 
     @Test
     public void existClients(){

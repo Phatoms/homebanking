@@ -112,24 +112,24 @@ public class IntegrationJpaTest {
         assertEquals(60, clientLoan.orElseThrow().getPayments());
     }
 
-    @Test
-    void testFindAllCards(){
-        List<Card> cards = cardRepository.findAll();
-        assertFalse(cards.isEmpty());
-    }
+//    @Test
+//    void testFindAllCards(){
+//        List<Card> cards = cardRepository.findAll();
+//        assertFalse(cards.isEmpty());
+//    }
 
-    @Test
-    void testFindCardById(){
-        Optional<Card> card = cardRepository.findById(1L);
-        assertTrue(card.isPresent());
-        assertEquals("Tomas Quinteros", card.orElseThrow().getCardHolder());
-        assertEquals("3325-6745-7876-4445", card.orElseThrow().getNumber());
-        assertEquals(990, card.orElseThrow().getCvv());
-        assertEquals(CardColor.GOLD, card.orElseThrow().getColor());
-        assertEquals(CardType.CREDIT, card.orElseThrow().getType());
-        assertEquals(LocalDate.parse("2022-09-08"), card.orElseThrow().getFromDate());
-        assertEquals(LocalDate.parse("2027-09-08"), card.orElseThrow().getThruDate());
-    }
+//    @Test
+//    void testFindCardById(){
+//        Optional<Card> card = cardRepository.findById(1L);
+//        assertTrue(card.isPresent());
+//        assertEquals("Tomas Quinteros", card.orElseThrow().getCardHolder());
+//        assertEquals("3325-6745-7876-4445", card.orElseThrow().getNumber());
+//        assertEquals(990, card.orElseThrow().getCvv());
+//        assertEquals(CardColor.GOLD, card.orElseThrow().getColor());
+//        assertEquals(CardType.CREDIT, card.orElseThrow().getType());
+//        assertEquals(LocalDate.parse("2022-09-08"), card.orElseThrow().getFromDate());
+//        assertEquals(LocalDate.parse("2027-09-08"), card.orElseThrow().getThruDate());
+//    }
 
     @Test
     void testClientSave(){
@@ -167,18 +167,18 @@ public class IntegrationJpaTest {
         assertEquals("1111-2222-3333-4444", creditCardTransactions.orElseThrow().getCreditCard().getNumber());
     }
 
-    @Test
-    void testFindAllDebitCardTransactions(){
-        List<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findAll();
-        assertFalse(debitCardTransactions.isEmpty());
-    }
+//    @Test
+//    void testFindAllDebitCardTransactions(){
+//        List<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findAll();
+//        assertFalse(debitCardTransactions.isEmpty());
+//    }
 
-    @Test
-    void testFindDebitCardTransactionsByAccountNumber(){
-        Optional<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findById(1L);
-        assertTrue(debitCardTransactions.isPresent());
-        assertEquals("VIN005", debitCardTransactions.orElseThrow().getAccount().getNumber());
-    }
+//    @Test
+//    void testFindDebitCardTransactionsByAccountNumber(){
+//        Optional<DebitCardTransaction> debitCardTransactions = debitCardTransactionRepository.findById(1L);
+//        assertTrue(debitCardTransactions.isPresent());
+//        assertEquals("VIN005", debitCardTransactions.orElseThrow().getAccount().getNumber());
+//    }
 
 
 
