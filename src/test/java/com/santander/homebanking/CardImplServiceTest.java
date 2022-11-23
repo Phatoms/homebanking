@@ -14,6 +14,8 @@ import com.santander.homebanking.services.implement.CardImplService;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.mockito.Spy;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -23,8 +25,6 @@ import java.util.List;
 public class CardImplServiceTest {
 
     HttpSession session = mock(HttpSession.class);
-
-
     private CardRepository cardRepository = mock(CardRepository.class);
     private ClientRepository clientRepository = mock(ClientRepository.class);
     private CreditCardTransactionRepository creditCardTransactionRepository = mock(CreditCardTransactionRepository.class);
@@ -33,57 +33,39 @@ public class CardImplServiceTest {
     List<Client> clients = Arrays.asList(
             new Client("tomas", "quinteros", "tomas.quinteros35@gmail.com", "123")
     );
-
-    List<DebitCardTransaction> debitCardTransactions = Arrays.asList(
-
-
-    );
-
-    List<CreditCardTransaction> creditCardTransactions = Arrays.asList(
-
-
-    );
-
     List<Card> cards = Arrays.asList(
             new CreditCard("Tomas Quinteros", "1111-2222-3333-4444", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.TITANIUM, CardType.CREDIT, "1234", 200000.0, 200000.0),
             new DebitCard("Tomas Quinteros", "2222-3333-4444-5555", 123, LocalDate.parse("2022-09-08"), LocalDate.parse("2027-09-08"), CardColor.GOLD, CardType.DEBIT, "1234")
     );
 
 
-    CardImplService cardImplService = new CardImplService(cardRepository, clientRepository, creditCardTransactionRepository, debitCardTransactionRepository);
+    CardImplService cardImplService = spy(new CardImplService(cardRepository, clientRepository, creditCardTransactionRepository, debitCardTransactionRepository));
 
     @Before
     public void initData(){
-        for (Client client: clients
-             ) {
-            clientRepository.save(client);
-        }
-        System.out.println("client started");
-
         clients.get(0).addCreditCards((CreditCard) cards.get(0));
-        Account account = new Account("VIN-003", LocalDate.now(), 30000.0);
-        clients.get(0).addAccounts(account);
-        account.addDebitCard((DebitCard) cards.get(1));
-
-        for (Card card: cards
-             ) {
-            cardRepository.save(card);
-        }
-
-        System.out.println("cards started");
+        cardImplService.setClient(clients.get(0));
     }
 
     @Test
     public void newBasicCardTest(){
-        when(session.getAttribute("client")).thenReturn(clients.get(0));
-        when(cardImplService.validateCard("GOLD", CardType.DEBIT, session)).thenReturn(new ResponseUtils(true, 201, "card.validation.success"));
+        doReturn(new ResponseUtils(true, 201, "card.validation.success")).when(cardImplService).
+                validateCard("GOLD", CardType.DEBIT, session);
 
         CardDTO testCardDTO = cardImplService.newBasicCard("GOLD", CardType.DEBIT, session);
 
         assertThat(testCardDTO.getCardHolder(), is("tomas quinteros"));
         assertThat(testCardDTO.getColor(), is(CardColor.GOLD));
         assertThat(testCardDTO.getType(), is(CardType.DEBIT));
-
     }
 
+    @Test
+    public void validateCardTest(){
+        when(session.getAttribute("client")).thenReturn(clients.get(0));
+        ResponseUtils res = cardImplService.validateCard("GOLD", CardType.DEBIT, session);
+
+
+        assertThat(res.getDone(), is(true));
+        assertThat(res.getMessage(), is("card.validation.success"));
+    }
 }
