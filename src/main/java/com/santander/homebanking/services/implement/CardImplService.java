@@ -28,6 +28,7 @@ public class CardImplService implements CardService {
     private CreditCardTransactionRepository creditCardTransactionRepository;
     private DebitCardTransactionRepository debitCardTransactionRepository;
 
+    @Autowired
     public CardImplService(CardRepository cardRepository, ClientRepository clientRepository, CreditCardTransactionRepository creditCardTransactionRepository, DebitCardTransactionRepository debitCardTransactionRepository) {
         this.cardRepository = cardRepository;
         this.clientRepository = clientRepository;

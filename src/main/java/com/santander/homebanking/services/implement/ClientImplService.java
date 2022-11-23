@@ -33,14 +33,14 @@ public class ClientImplService implements ClientService {
     private PasswordEncoder passwordEncoder;
 
 
+    @Autowired
     public ClientImplService(ClientRepository clientRepository, AccountRepository accountRepository, CardRepository cardRepository) {
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
         this.cardRepository = cardRepository;
     }
 
-    public ClientImplService (ClientRepository clientRepository){
-        this.clientRepository = clientRepository;
+    public ClientImplService() {
     }
 
     public List<ClientDTO> getClients() {

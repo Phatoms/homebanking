@@ -49,6 +49,9 @@ public class DebitCardImplService implements DebitCardService {
         this.senderService = senderService;
     }
 
+    public DebitCardImplService() {
+    }
+
     private CardDTO card;
 
     private Client client;

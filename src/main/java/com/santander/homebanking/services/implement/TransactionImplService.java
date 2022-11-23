@@ -21,15 +21,12 @@ import java.util.stream.Collectors;
 public class TransactionImplService implements TransactionService {
 
     private ClientRepository clientRepository;
-
     private AccountRepository accountRepository;
-
     private TransactionRepository transactionRepository;
-
     private Account accountTo;
     private Account accountFrom;
     private Client client;
-
+    @Autowired
     public TransactionImplService(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
