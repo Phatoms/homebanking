@@ -24,7 +24,7 @@ public class DebitCardImplService implements DebitCardService {
 
     private CardImplService cardImplService;
 
-    private DebitCardRepository debitCardRepository;
+    private final DebitCardRepository debitCardRepository;
 
     private ClientRepository clientRepository;
 
@@ -39,6 +39,7 @@ public class DebitCardImplService implements DebitCardService {
     @Autowired
     private MessageSource messages;
 
+    @Autowired
     public DebitCardImplService(CardImplService cardImplService, DebitCardRepository debitCardRepository, ClientRepository clientRepository, AccountRepository accountRepository, DebitCardTransactionRepository debitCardTransactionRepository, TransactionRepository transactionRepository, EmailSenderImplService senderService) {
         this.cardImplService = cardImplService;
         this.debitCardRepository = debitCardRepository;
@@ -49,8 +50,6 @@ public class DebitCardImplService implements DebitCardService {
         this.senderService = senderService;
     }
 
-    public DebitCardImplService() {
-    }
 
     private CardDTO card;
 

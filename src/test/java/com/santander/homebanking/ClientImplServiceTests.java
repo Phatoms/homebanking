@@ -8,6 +8,7 @@ import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.services.implement.ClientImplService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -26,7 +27,10 @@ public class ClientImplServiceTests {
     AccountRepository accountRepository = mock(AccountRepository.class);
     CardRepository cardRepository = mock(CardRepository.class);
     HttpSession session = mock(HttpSession.class);
-    ClientImplService clientImplService = new ClientImplService(clientRepository, accountRepository, cardRepository);
+
+    PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    ClientImplService clientImplService = new ClientImplService(clientRepository, accountRepository,
+            cardRepository, passwordEncoder);
 
     List<Client> clients = Arrays.asList(
             new Client("tomas", "quinteros", "tomas.quinteros351@gmail.com", "123"),
