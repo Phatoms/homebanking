@@ -21,6 +21,10 @@ public interface CardService {
                                       HttpSession session);
     void chanceToReject();
 
+    public Client getClient();
+
+    public void setClient(Client client);
+
 
 
 }

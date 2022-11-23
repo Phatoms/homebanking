@@ -136,6 +136,11 @@ public class CardImplService implements CardService {
         }
     }
 
+    public Client getClient() {
+        return client;
+    }
 
-
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }
