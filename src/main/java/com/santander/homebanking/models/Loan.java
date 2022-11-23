@@ -78,4 +78,8 @@ public class Loan {
         clientLoan.setLoan(this);
         clientLoans.add(clientLoan);
     }
+
+    public void setId(Long id) {
+        Id = id;
+    }
 }
