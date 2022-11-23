@@ -7,6 +7,7 @@ import com.santander.homebanking.dtos.ClientDTO;
 import com.santander.homebanking.models.Account;
 import com.santander.homebanking.models.Client;
 import com.santander.homebanking.repositories.AccountRepository;
+import com.santander.homebanking.repositories.CardRepository;
 import com.santander.homebanking.repositories.ClientRepository;
 import com.santander.homebanking.services.implement.AccountImplService;
 import com.santander.homebanking.services.implement.ClientImplService;
@@ -29,7 +30,9 @@ public class AccountImplServicesTest{
         ClientRepository clientRepository = mock(ClientRepository.class);
         AccountRepository accountRepository = mock(AccountRepository.class);
 
-        ClientImplService clientImplService = new ClientImplService(clientRepository);
+        CardRepository cardRepository = mock(CardRepository.class);
+
+        ClientImplService clientImplService = new ClientImplService(clientRepository, accountRepository, cardRepository);
         AccountImplService accountImplService = new AccountImplService(clientRepository, accountRepository);
 
         List<Client> clients = Arrays.asList(
@@ -60,14 +63,19 @@ public class AccountImplServicesTest{
         }
 
 
-        Set<AccountDTO> getAccounts(){
-                when(accountRepository.findAll().stream().map(AccountDTO::new).collect(Collectors.toSet()))
-                        .thenReturn(Optional.of(accounts.stream().collect(Collectors.toSet())));
+        @Test
+        public void getAccounts(){
+//                when(accountRepository.findAll().stream().map(AccountDTO::new).collect(Collectors.toSet()))
+//                        .thenReturn(accounts.stream().map(AccountDTO::new).collect(Collectors.toSet()));
+                doReturn(accounts.stream().map(AccountDTO::new)).when(accountRepository).
+                        findAll().stream().map(AccountDTO::new).collect(Collectors.toSet());
+/*                when(accountRepository.findAll().stream().map(AccountDTO::new).collect(Collectors.toSet()))
+                        .thenReturn(accounts.stream().map(AccountDTO::new).collect(Collectors.toSet()));*/
 
                 Set<AccountDTO> accountDTOSet = accountImplService.getAccounts();
 
                 Assert.assertEquals(accounts.size(), accountDTOSet.size());
-        };
+        }
 
 
 

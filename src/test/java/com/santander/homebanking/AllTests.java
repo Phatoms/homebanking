@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(value = Suite.class)
 @Suite.SuiteClasses({
-        CardUtilsTests.class
+        CardUtilsTests.class,
+        CardImplServiceTest.class
 })
 public class AllTests {
 }

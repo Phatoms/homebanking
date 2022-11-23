@@ -28,6 +28,7 @@ public class AccountImplService implements AccountService {
 
     private AccountRepository accountRepository;
 
+    @Autowired
     public AccountImplService(ClientRepository clientRepository,
                               AccountRepository accountRepository) {
         this.clientRepository = clientRepository;

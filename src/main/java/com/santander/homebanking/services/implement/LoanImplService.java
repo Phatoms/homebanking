@@ -26,7 +26,7 @@ public class LoanImplService implements LoanService {
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
     private ClientLoansRepository clientLoansRepository;
-
+    @Autowired
     public LoanImplService(LoanRepository loanRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, ClientLoansRepository clientLoansRepository) {
         this.loanRepository = loanRepository;
         this.accountRepository = accountRepository;
