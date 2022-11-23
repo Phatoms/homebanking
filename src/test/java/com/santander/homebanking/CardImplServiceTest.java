@@ -64,7 +64,6 @@ public class CardImplServiceTest {
         when(session.getAttribute("client")).thenReturn(clients.get(0));
         ResponseUtils res = cardImplService.validateCard("GOLD", CardType.DEBIT, session);
 
-
         assertThat(res.getDone(), is(true));
         assertThat(res.getMessage(), is("card.validation.success"));
     }
