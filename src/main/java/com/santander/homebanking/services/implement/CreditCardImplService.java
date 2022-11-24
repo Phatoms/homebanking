@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -271,7 +272,7 @@ public class CreditCardImplService implements CreditCardService {
         return fees;
     }
 
-    //@Scheduled(cron = "3 * * * * *")
+    @Scheduled(cron = "1 * * * * *")
     public void creditCardStatement(){
         List<Client> clients = clientRepository.findAll();
 
