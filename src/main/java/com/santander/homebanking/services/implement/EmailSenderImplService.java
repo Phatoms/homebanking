@@ -983,7 +983,7 @@ public class EmailSenderImplService implements EmailSenderService {
                 "\n" +
                 "</html>";
 
-        String htmlMsg = htmlMsgPre + htmlMsgPost;
+        String htmlMsg = htmlMsgPre + htmlTotal + htmlMsgPost;
         helper.setText(htmlMsg, true);
         helper.setTo(toEmail);
         helper.setSubject(subject);
