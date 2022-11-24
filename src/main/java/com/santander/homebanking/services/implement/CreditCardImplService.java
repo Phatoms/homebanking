@@ -272,7 +272,7 @@ public class CreditCardImplService implements CreditCardService {
         return fees;
     }
 
-    @Scheduled(cron = "1 * * * * *")
+    @Scheduled(cron = "0 0/30 * * * ?")
     public void creditCardStatement(){
         List<Client> clients = clientRepository.findAll();
 

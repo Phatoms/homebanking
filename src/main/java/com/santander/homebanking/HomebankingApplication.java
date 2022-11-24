@@ -154,10 +154,10 @@ public class HomebankingApplication {
 			debitCardRepository.save(debitCard);
 
 			CreditCardTransaction creditCardTransaction1 = new CreditCardTransaction(100000.0, "Televisor Samsung 50 pulgadas", LocalDateTime.now(),
-					"123456", Status.PASSED, 12, 0.05, creditCard1);
+					"123456", Status.PASSED, 12, 0.045, creditCard1);
 
 			CreditCardTransaction creditCardTransaction2 = new CreditCardTransaction(280000.0, "Celular Samsung S22", LocalDateTime.now(),
-					"123456", Status.PASSED, 24, 0.08, creditCard1);
+					"123456", Status.PASSED, 24, 0.05, creditCard1);
 
 			CreditCardTransaction creditCardTransaction3 = new CreditCardTransaction(3800.0, "Supermercado Disco", LocalDateTime.now(),
 					"123456", Status.PASSED, 3, 0.03, creditCard1);
