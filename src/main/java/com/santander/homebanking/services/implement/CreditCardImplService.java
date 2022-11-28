@@ -272,12 +272,12 @@ public class CreditCardImplService implements CreditCardService {
         return fees;
     }
 
-    @Scheduled(cron = "1 * * * * *")
+    //@Scheduled(cron = "1 * * * * *")
     public void creditCardStatement(){
         List<Client> clients = clientRepository.findAll();
 
         if (clients == null){
-            System.out.println("salio mal");
+            logger.error("Clients null on creditCardStatement");
             return;
         }
 
