@@ -19,9 +19,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
 
-public class ClientImplServiceTests {
+public class ClientImplServiceTest {
 
     ClientRepository clientRepository = mock(ClientRepository.class);
     AccountRepository accountRepository = mock(AccountRepository.class);

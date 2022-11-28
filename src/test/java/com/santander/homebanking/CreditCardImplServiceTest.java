@@ -1,7 +1,6 @@
 package com.santander.homebanking;
 
 import com.santander.homebanking.dtos.CardDTO;
-import com.santander.homebanking.dtos.CreditCardDTO;
 import com.santander.homebanking.dtos.FeesDTO;
 import com.santander.homebanking.models.*;
 import com.santander.homebanking.repositories.ClientRepository;
@@ -15,8 +14,6 @@ import com.santander.homebanking.services.implement.CreditCardImplService;
 import com.santander.homebanking.services.implement.EmailSenderImplService;
 import com.santander.homebanking.utils.ResponseUtils;
 import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.junit.Test;
 
 import javax.servlet.http.HttpSession;
@@ -31,7 +28,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
-public class CreditCardImplServiceTests {
+public class CreditCardImplServiceTest {
 
     InterestRateRepository interestRateRepository = mock(InterestRateRepository.class);
     CardService cardService = mock(CardImplService.class);

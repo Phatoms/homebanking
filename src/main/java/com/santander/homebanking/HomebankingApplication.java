@@ -40,7 +40,8 @@ public class HomebankingApplication {
 									  ClientLoansRepository clientLoansRepository,
 									  TransactionRepository transactionRepository,
 									  InterestRateRepository interestRateRepository,
-									  CreditCardTransactionRepository creditCardTransactionRepository
+									  CreditCardTransactionRepository creditCardTransactionRepository,
+									  DebitCardTransactionRepository debitCardTransactionRepository
 	){
 		return (args) -> {
 
@@ -153,6 +154,10 @@ public class HomebankingApplication {
 			creditCardRepository.save(creditCard3);
 			debitCardRepository.save(debitCard);
 
+
+			DebitCardTransaction debitCardTransaction = new DebitCardTransaction(10000.0, "Compra con debito", LocalDateTime.now(),
+			"123456", Status.PASSED, account1);
+
 			CreditCardTransaction creditCardTransaction1 = new CreditCardTransaction(100000.0, "Televisor Samsung 50 pulgadas", LocalDateTime.now(),
 					"123456", Status.PASSED, 12, 0.045, creditCard1);
 
@@ -164,6 +169,9 @@ public class HomebankingApplication {
 
 			CreditCardTransaction creditCardTransaction4 = new CreditCardTransaction(3800.0, "Supermercado Disco", LocalDateTime.now(),
 					"123456", Status.PASSED, 3, 0.03, creditCard2);
+
+
+			debitCardTransactionRepository.save(debitCardTransaction);
 
 			creditCardTransactionRepository.save(creditCardTransaction1);
 			creditCardTransactionRepository.save(creditCardTransaction2);
